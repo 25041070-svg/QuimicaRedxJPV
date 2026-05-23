@@ -1,6 +1,6 @@
-// Simple serverless proxy to Hugging Face Inference API
+// Serverless proxy to Groq AI API (free, fast, reliable)
 // Deploy this file in the project root under /api (Vercel/Netlify serverless function)
-// Set environment variables in Vercel: HF_API_KEY and optionally HF_MODEL
+// Set environment variables in Vercel: GROQ_API_KEY
 
 module.exports = async (req, res) => {
   console.log('api/ai invoked', { method: req.method });
@@ -18,55 +18,55 @@ module.exports = async (req, res) => {
     return;
   }
 
-  const HF_KEY = process.env.HF_API_KEY;
-  const HF_MODEL = process.env.HF_MODEL || 'gpt2';
-  const HF_URL = `https://api-inference.huggingface.co/models/${HF_MODEL}`;
-
-  if (!HF_KEY) {
-    console.error('Missing HF_API_KEY in environment');
-    res.status(500).json({ error: 'Missing Hugging Face API key', details: 'Set HF_API_KEY in Vercel environment variables.' });
+  const GROQ_KEY = process.env.GROQ_API_KEY;
+  if (!GROQ_KEY) {
+    console.error('Missing GROQ_API_KEY in environment');
+    res.status(500).json({ error: 'Missing Groq API key', details: 'Set GROQ_API_KEY in Vercel environment variables.' });
     return;
   }
 
-  let body;
+  let userPrompt = '';
   try {
     const incoming = req.body || {};
-    if (incoming.prompt) {
-      body = { inputs: incoming.prompt, parameters: incoming.parameters || {} };
-    } else if (incoming.inputs) {
-      body = { inputs: incoming.inputs, parameters: incoming.parameters || {} };
-    } else {
-      body = incoming;
-    }
+    userPrompt = incoming.prompt || incoming.inputs || JSON.stringify(incoming);
   } catch (e) {
-    body = {};
+    userPrompt = '';
+  }
+
+  if (!userPrompt) {
+    res.status(400).json({ error: 'Missing prompt' });
+    return;
   }
 
   try {
-    const r = await fetch(HF_URL, {
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${HF_KEY}`,
+        'Authorization': `Bearer ${GROQ_KEY}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(body)
+      body: JSON.stringify({
+        model: 'mixtral-8x7b-32768',
+        messages: [{ role: 'user', content: userPrompt }],
+        temperature: 0.7,
+        max_tokens: 1024
+      })
     });
 
-    const text = await r.text();
-    if (!r.ok) {
-      console.error(`Hugging Face returned ${r.status}: ${text}`);
-      res.status(r.status).send(text);
+    if (!response.ok) {
+      const errText = await response.text();
+      console.error(`Groq API error ${response.status}: ${errText}`);
+      res.status(response.status).json({ error: `Groq error: ${response.status}`, details: errText });
       return;
     }
 
-    try {
-      const data = JSON.parse(text);
-      res.status(200).json(data);
-    } catch (err) {
-      res.status(200).send(text);
-    }
+    const data = await response.json();
+    // Return in a format compatible with HF Inference (array with generated_text)
+    const generatedText = data.choices?.[0]?.message?.content || '';
+    res.status(200).json([{ generated_text: generatedText }]);
+
   } catch (err) {
-    console.error('AI proxy fetch failed', err);
-    res.status(502).json({ error: 'Error connecting to Hugging Face', details: err.message });
+    console.error('AI proxy fetch failed:', err.message);
+    res.status(502).json({ error: 'Error connecting to Groq', details: err.message });
   }
 };
