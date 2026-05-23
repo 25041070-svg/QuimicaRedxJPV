@@ -2,9 +2,8 @@
 // Deploy this file in the project root under /api (Vercel/Netlify serverless function)
 // Set environment variables in Vercel: HF_API_KEY and optionally HF_MODEL
 
-const fetch = require('node-fetch');
-
 module.exports = async (req, res) => {
+  console.log('api/ai invoked', { method: req.method });
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
