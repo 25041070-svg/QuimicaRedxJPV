@@ -1,0 +1,3385 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JP — Química</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0a0a0a;
+  --paper: #f5f0e8;
+  --paper2: #ede7d6;
+  --paper3: #e3dcc8;
+  --line: #c8bfa0;
+  --line2: #a89870;
+  --amber: #d4870a;
+  --amber-light: #f5a623;
+  --amber-dark: #a06008;
+  --crimson: #c0392b;
+  --teal: #1a7a6e;
+  --serif: 'Instrument Serif', Georgia, serif;
+  --mono: 'IBM Plex Mono', 'Courier New', monospace;
+  --sans: 'Syne', sans-serif;
+  --sh: 2px 2px 0 rgba(0,0,0,0.15);
+  --r: 2px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--sans);
+  background: var(--ink);
+  color: var(--ink);
+  min-height: 100vh;
+  display: flex;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: 220px;
+  min-width: 220px;
+  background: var(--ink);
+  display: flex;
+  flex-direction: column;
+  padding: 32px 0;
+  border-right: 1px solid #222;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidebar { background: linear-gradient(180deg, #060606 0%, #0d0d0d 100%); }
+.sidebar-logo { padding-bottom: 22px; }
+.nav-icon { display:inline-block; width:28px; text-align:center; font-size:1.05rem; margin-right:10px; }
+.nav-text { flex:1; text-align:left; }
+.module-group { padding: 8px 20px 0; }
+.module-toggle { display:flex; align-items:center; justify-content:space-between; cursor:pointer; padding:8px 12px; border:1px solid rgba(255,255,255,0.03); color:#777; font-family:var(--mono); font-size:0.65rem; text-transform:uppercase; letter-spacing:0.12em; background:transparent; }
+.module-toggle:hover { color: var(--amber-light); }
+.module-count { background: rgba(255,255,255,0.04); padding:4px 8px; border-radius:12px; font-size:0.65rem; color:#bbb; }
+.module-list { margin-top:8px; display:flex; flex-direction:column; gap:6px; }
+.module-list.collapsed { display:none; }
+.nav-item { padding: 10px 14px; border-left: 4px solid transparent; border-radius:6px; margin:0 10px; }
+.nav-item .nav-num { font-size:0.65rem; color:#444; margin-left:auto; }
+.nav-item:hover { transform: translateX(4px); }
+.nav-item.active { background: linear-gradient(90deg, rgba(212,135,10,0.08), rgba(212,135,10,0.03)); border-left-color: var(--amber); color: var(--amber-light); }
+
+.sidebar-logo {
+  padding: 0 24px 28px;
+  border-bottom: 1px solid #222;
+  margin-bottom: 28px;
+}
+
+.sidebar-logo-title {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.25rem;
+  color: var(--amber-light);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.sidebar-logo-sub {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-top: 6px;
+}
+
+.sidebar-label {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  color: #444;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  padding: 0 24px;
+  margin-bottom: 10px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  cursor: pointer;
+  transition: all 0.18s;
+  border-left: 3px solid transparent;
+  color: #555;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  user-select: none;
+  text-transform: uppercase;
+}
+
+.nav-item:hover {
+  color: #888;
+  background: rgba(255,255,255,0.03);
+}
+
+.nav-item.active {
+  color: var(--amber-light);
+  border-left-color: var(--amber);
+  background: rgba(212,135,10,0.08);
+}
+
+.nav-num {
+  font-size: 0.6rem;
+  color: #333;
+  font-family: var(--mono);
+}
+
+.nav-item.active .nav-num { color: var(--amber-dark); }
+
+.sidebar-footer {
+  margin-top: auto;
+  padding: 20px 24px 0;
+  border-top: 1px solid #1a1a1a;
+}
+
+.sidebar-footer-label {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.sidebar-version {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: #444;
+  margin-top: 4px;
+}
+
+/* ── MAIN ── */
+.main {
+  flex: 1;
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Graph paper background */
+.main::before {
+  content: '';
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  width: calc(100% - 220px);
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 28px 28px;
+  opacity: 0.25;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 40px;
+  background: var(--paper);
+  border-bottom: 2px solid var(--ink);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 2px 0 var(--line);
+}
+
+.topbar-title {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.5rem;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+
+.topbar-title em {
+  color: var(--amber);
+  font-style: normal;
+}
+
+.topbar-badge {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 5px 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ── CONTENT AREA ── */
+.content {
+  flex: 1;
+  padding: 36px 40px 60px;
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+}
+
+/* ── PANELS ── */
+.panel { display: none; }
+.panel.active {
+  display: block;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(10px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ── SECTION HEADING ── */
+.sect-head {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 28px;
+  padding-bottom: 14px;
+  border-bottom: 2px solid var(--ink);
+}
+
+.sect-num {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--amber-dark);
+  letter-spacing: 0.1em;
+}
+
+.sect-title {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.8rem;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+
+.sect-desc {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: #888;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-left: auto;
+}
+
+/* ── FIELD GROUPS ── */
+.field-group {
+  background: var(--paper2);
+  border: 2px solid var(--ink);
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: var(--sh);
+}
+
+.field-label {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--amber-dark);
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.field-label::before {
+  content: '';
+  display: block;
+  width: 6px; height: 6px;
+  background: var(--amber);
+}
+
+/* ── INPUTS ── */
+.input-wrap { position: relative; }
+
+input[type="text"],
+input[type="number"],
+select {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  color: var(--ink);
+  padding: 12px 16px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  border-radius: 0;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+input[type="text"] { width: 100%; }
+input[type="number"] { width: 130px; }
+select { width: 100%; background: var(--paper); }
+select option { background: var(--paper); }
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+  border-color: var(--amber);
+  box-shadow: 3px 3px 0 var(--amber-dark);
+}
+
+.input-hint {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: #888;
+  margin-top: 8px;
+  line-height: 1.6;
+  border-left: 2px solid var(--line2);
+  padding-left: 10px;
+}
+
+/* ── MEDIUM TOGGLE ── */
+.medium-toggle {
+  display: flex;
+  gap: 0;
+  border: 2px solid var(--ink);
+  overflow: hidden;
+}
+
+.med-opt {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  padding: 10px 20px;
+  cursor: pointer;
+  background: var(--paper);
+  color: #777;
+  border: none;
+  border-right: 2px solid var(--ink);
+  transition: all 0.15s;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  flex: 1;
+  text-align: center;
+}
+
+.med-opt:last-child { border-right: none; }
+.med-opt:hover { background: var(--paper3); color: var(--ink); }
+.med-opt.active {
+  background: var(--ink);
+  color: var(--amber-light);
+}
+
+/* ── EXAMPLE PILLS ── */
+.examples-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.ex-tag {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  padding: 5px 10px;
+  border: 1.5px solid var(--line2);
+  background: var(--paper);
+  color: #777;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.04em;
+}
+
+.ex-tag:hover {
+  border-color: var(--amber);
+  color: var(--amber-dark);
+  background: var(--paper2);
+}
+
+/* ── BUTTONS ── */
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+
+.btn {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 12px 24px;
+  border: 2px solid;
+  cursor: pointer;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: all 0.15s;
+  border-radius: 0;
+}
+
+.btn-primary {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--amber-light);
+  box-shadow: 3px 3px 0 var(--amber-dark);
+}
+
+.btn-primary:hover {
+  background: var(--amber-dark);
+  border-color: var(--amber-dark);
+  color: var(--paper);
+  box-shadow: 5px 5px 0 var(--ink);
+}
+
+.btn-primary:active { box-shadow: 1px 1px 0 var(--ink); transform: translate(2px,2px); }
+
+.btn-secondary {
+  background: transparent;
+  border-color: var(--line2);
+  color: #888;
+  box-shadow: 2px 2px 0 var(--line);
+}
+
+.btn-secondary:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+.btn-sm { padding: 7px 14px; font-size: 0.65rem; }
+
+/* ── MESSAGES ── */
+.msg {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  padding: 12px 16px;
+  border: 2px solid;
+  margin: 16px 0;
+  line-height: 1.5;
+}
+
+.msg-error {
+  border-color: var(--crimson);
+  background: #fdf2f2;
+  color: var(--crimson);
+}
+
+.msg-success {
+  border-color: var(--teal);
+  background: #f2fdfb;
+  color: var(--teal);
+}
+
+/* ════════════════════════════════════════
+   RESULTS — Dashboard redesign
+════════════════════════════════════════ */
+.results-area { margin-top: 32px; }
+
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Hero equation card ── */
+.res-hero {
+  border: 2px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  margin-bottom: 20px;
+  animation: riseIn 0.35s ease both;
+  overflow: hidden;
+}
+
+.res-hero-topbar {
+  background: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 18px;
+}
+
+.res-hero-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--amber-light);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.res-hero-label::before {
+  content: '';
+  width: 7px; height: 7px;
+  background: var(--amber);
+  display: block;
+}
+
+.res-hero-body {
+  background: var(--paper2);
+  padding: 28px 24px 22px;
+  text-align: center;
+}
+
+.eq-display {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  line-height: 1.6;
+  margin-bottom: 16px;
+  word-break: break-word;
+}
+
+/* ── Stats row ── */
+.res-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 18px;
+  animation: riseIn 0.35s 0.07s ease both;
+}
+
+.stat-card {
+  border: 2px solid var(--ink);
+  background: var(--paper2);
+  padding: 16px 14px;
+  box-shadow: 3px 3px 0 var(--line2);
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.15s, transform 0.15s;
+}
+
+.stat-card:hover {
+  box-shadow: 5px 5px 0 var(--ink);
+  transform: translate(-1px, -1px);
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+
+.stat-card.sc-electrons::before { background: var(--amber); }
+.stat-card.sc-redox::before     { background: var(--crimson); }
+.stat-card.sc-ok::before        { background: var(--teal); }
+.stat-card.sc-fail::before      { background: var(--crimson); }
+
+.stat-icon {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.stat-value {
+  font-family: var(--mono);
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ink);
+  letter-spacing: -0.04em;
+}
+
+.stat-value.sv-ok   { color: var(--teal); }
+.stat-value.sv-fail { color: var(--crimson); }
+
+.stat-label {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: #888;
+  margin-top: 5px;
+}
+
+.stat-sub {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: #777;
+  margin-top: 6px;
+  line-height: 1.5;
+  border-top: 1px solid var(--line);
+  padding-top: 6px;
+}
+
+/* ── Two-column grid ── */
+.res-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+  animation: riseIn 0.35s 0.14s ease both;
+}
+
+.res-grid-full {
+  grid-column: 1 / -1;
+}
+
+/* ── Panel base ── */
+.res-panel {
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--line2);
+  overflow: hidden;
+  transition: box-shadow 0.15s;
+}
+
+.res-panel:hover { box-shadow: 4px 4px 0 var(--ink); }
+
+.res-panel-head {
+  background: var(--ink);
+  padding: 9px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.res-panel-head-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--amber-light);
+  font-weight: 600;
+  flex: 1;
+}
+
+.res-panel-badge {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  background: rgba(255,255,255,0.06);
+  color: #777;
+  padding: 2px 8px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.res-panel-body {
+  background: var(--paper);
+  padding: 16px;
+}
+
+/* ── Oxidation state tiles — periodic table style ── */
+.ox-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  gap: 8px;
+}
+
+.ox-tile {
+  border: 2px solid var(--ink);
+  background: var(--paper2);
+  padding: 10px 6px 8px;
+  text-align: center;
+  position: relative;
+  transition: box-shadow 0.15s, transform 0.15s;
+  cursor: default;
+}
+
+.ox-tile:hover {
+  box-shadow: 3px 3px 0 var(--ink);
+  transform: translate(-1px,-1px);
+}
+
+.ox-tile.is-ox {
+  background: #fdf2f0;
+  border-color: var(--crimson);
+}
+
+.ox-tile.is-red {
+  background: #f0fdf8;
+  border-color: var(--teal);
+}
+
+.ox-tile-idx {
+  position: absolute;
+  top: 4px; left: 5px;
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  color: #bbb;
+}
+
+.ox-tile-sym {
+  font-family: var(--mono);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.ox-tile-val {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: #666;
+  margin-top: 4px;
+}
+
+.ox-tile-badge {
+  font-family: var(--mono);
+  font-size: 0.48rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 5px;
+  padding: 2px 4px;
+  display: inline-block;
+}
+
+.ox-tile.is-ox .ox-tile-badge { background: var(--crimson); color: #fff; }
+.ox-tile.is-red .ox-tile-badge { background: var(--teal); color: #fff; }
+
+/* ── Half-reactions ── */
+.half-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.half-card {
+  border: 2px solid var(--ink);
+  overflow: hidden;
+}
+
+.half-card-head {
+  padding: 7px 12px;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.half-card.hc-ox .half-card-head  { background: #fdf2f0; color: var(--crimson); border-bottom: 2px solid var(--crimson); }
+.half-card.hc-red .half-card-head { background: #f0fdf8; color: var(--teal);    border-bottom: 2px solid var(--teal); }
+
+.half-card-body {
+  background: var(--paper2);
+  padding: 12px 14px;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--ink);
+  line-height: 1.6;
+  word-break: break-all;
+}
+
+.half-card-electrons {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  font-size: 0.65rem;
+  background: var(--paper3);
+  border: 1px solid var(--line2);
+  padding: 3px 8px;
+  color: #666;
+}
+
+/* ── Steps — horizontal timeline ── */
+.steps-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.step-row {
+  display: flex;
+  gap: 0;
+  align-items: stretch;
+  border-bottom: 1px solid var(--line);
+  transition: background 0.12s;
+}
+
+.step-row:last-child { border-bottom: none; }
+.step-row:hover { background: var(--paper2); }
+
+.step-num-col {
+  width: 42px;
+  min-width: 42px;
+  background: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--amber-light);
+  flex-shrink: 0;
+}
+
+.step-content-col {
+  flex: 1;
+  padding: 12px 16px;
+}
+
+.step-title-txt {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.step-detail-txt {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: #666;
+  line-height: 1.7;
+  word-break: break-word;
+}
+
+/* ── Verification table ── */
+.verify-summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  border: 2px solid;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.verify-summary.vs-ok   { border-color: var(--teal);    background: #f0fdf8; color: var(--teal); }
+.verify-summary.vs-fail { border-color: var(--crimson); background: #fdf2f0; color: var(--crimson); }
+
+.verify-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+}
+
+.verify-table th {
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: #888;
+  text-align: left;
+  padding: 0 8px 8px 0;
+  border-bottom: 2px solid var(--ink);
+  font-weight: 700;
+}
+
+.verify-table th:last-child { text-align: center; }
+
+.verify-table td {
+  padding: 7px 8px 7px 0;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+  color: var(--ink);
+}
+
+.verify-table tr:last-child td { border-bottom: none; }
+
+.vt-el { font-weight: 700; font-size: 0.85rem; }
+
+.vt-bar-cell { width: 50%; padding: 7px 14px 7px 0; }
+
+.vt-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.62rem;
+  color: #888;
+}
+
+.vt-track {
+  flex: 1;
+  height: 5px;
+  background: var(--line);
+  position: relative;
+  overflow: hidden;
+}
+
+.vt-fill {
+  height: 100%;
+  background: var(--ink);
+  transition: width 0.7s cubic-bezier(0.4,0,0.2,1);
+}
+
+.vt-fill.ok   { background: var(--teal); }
+.vt-fill.fail { background: var(--crimson); }
+
+.vt-check { text-align: center; font-size: 0.85rem; }
+.vt-ok   { color: var(--teal); }
+.vt-fail { color: var(--crimson); }
+
+/* Steps panel collapsible */
+.res-collapsible-head {
+  cursor: pointer;
+  user-select: none;
+}
+
+.res-collapsible-head:hover .res-panel-head { background: #1a1a1a; }
+
+.res-collapsible-chevron {
+  font-size: 0.65rem;
+  color: var(--amber-dark);
+  transition: transform 0.25s;
+}
+
+.res-collapsible.collapsed .res-collapsible-chevron { transform: rotate(-90deg); }
+.res-collapsible.collapsed .res-panel-body { display: none; }
+
+@media (max-width: 600px) {
+  .res-stats { grid-template-columns: 1fr 1fr; }
+  .res-stats .stat-card:last-child { grid-column: span 2; }
+  .res-grid { grid-template-columns: 1fr; }
+}
+
+/* ── ELECTRONEGATIVIDAD ── */
+.en-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.en-element-card {
+  background: var(--paper2);
+  border: 2px solid var(--ink);
+  padding: 24px;
+  text-align: center;
+  box-shadow: var(--sh);
+  transition: box-shadow 0.15s;
+}
+
+.en-element-card:hover { box-shadow: 4px 4px 0 var(--ink); }
+
+.en-sym {
+  font-family: var(--mono);
+  font-size: 3.2rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.en-name {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  color: #888;
+  margin-top: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.en-value {
+  font-family: var(--mono);
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-top: 12px;
+  color: var(--ink);
+}
+
+.en-value-label {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 2px;
+}
+
+.en-bar-wrap {
+  height: 6px;
+  background: var(--line);
+  margin-top: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.en-bar {
+  height: 100%;
+  transition: width 0.9s cubic-bezier(0.4,0,0.2,1);
+  background: var(--ink);
+}
+
+.en-analysis-card {
+  grid-column: span 2;
+  background: var(--paper2);
+  border: 2px solid var(--ink);
+  padding: 22px 24px;
+  box-shadow: var(--sh);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  line-height: 1.7;
+  color: var(--ink);
+}
+
+.analysis-row {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+
+.analysis-key {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #888;
+  min-width: 100px;
+  font-weight: 600;
+}
+
+.analysis-val { color: var(--ink); }
+
+/* bond result */
+.bond-display {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 18px 22px;
+  margin: 16px 0;
+  border: 2px solid var(--ink);
+}
+
+.bond-type-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.bond-type-name {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.6rem;
+  color: var(--amber-light);
+  margin-top: 4px;
+  letter-spacing: -0.02em;
+}
+
+.bond-delta {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: #aaa;
+  margin-top: 6px;
+}
+
+.bond-bar-wrap {
+  height: 10px;
+  background: #222;
+  margin: 14px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.bond-bar {
+  height: 100%;
+  background: var(--amber);
+  transition: width 0.9s cubic-bezier(0.4,0,0.2,1);
+}
+
+.bond-markers {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  color: #666;
+}
+
+.bond-desc {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: #ccc;
+  line-height: 1.7;
+  margin-top: 12px;
+  border-top: 1px solid #222;
+  padding-top: 12px;
+}
+
+/* EN search */
+.el-search-wrap { position: relative; }
+
+.el-dropdown {
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 0; right: 0;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 100;
+  display: none;
+  box-shadow: 4px 4px 0 var(--ink);
+}
+
+.el-dropdown.open { display: block; }
+
+.el-option {
+  padding: 9px 14px;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  cursor: pointer;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  transition: background 0.1s;
+}
+
+.el-option:last-child { border-bottom: none; }
+.el-option:hover { background: var(--paper2); }
+.el-option .sym { color: var(--amber-dark); font-weight: 700; min-width: 30px; }
+.el-option .name { color: #888; font-size: 0.72rem; }
+.el-option .en-num { margin-left: auto; color: var(--ink); font-weight: 700; }
+
+/* Pauling gradient legend */
+.pauling-legend {
+  margin-top: 24px;
+  border: 2px solid var(--ink);
+  box-shadow: var(--sh);
+  overflow: hidden;
+}
+
+.pauling-header {
+  background: var(--ink);
+  color: var(--amber-light);
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 9px 16px;
+}
+
+.pauling-body { padding: 16px; background: var(--paper2); }
+
+.pauling-bar {
+  height: 22px;
+  background: linear-gradient(90deg, #888, #bbb, var(--amber-dark), var(--amber-light), var(--crimson));
+  margin-bottom: 8px;
+}
+
+.pauling-labels {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: #888;
+}
+
+/* Divider */
+.ruled-divider {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 24px 0;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+.ruled-divider::before, .ruled-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--line2);
+}
+
+/* ════════════════════════════════════════
+   VALENCIA MODULE STYLES
+════════════════════════════════════════ */
+
+/* Valence selector grid */
+.val-atom-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 0;
+}
+
+.val-atom-slot {
+  background: var(--paper2);
+  border: 2px solid var(--ink);
+  padding: 18px;
+  box-shadow: var(--sh);
+}
+
+.val-slot-title {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--amber-dark);
+  font-weight: 600;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.val-slot-title::before {
+  content: '';
+  display: block;
+  width: 6px; height: 6px;
+  background: var(--amber);
+}
+
+.val-select {
+  width: 100%;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  color: var(--ink);
+  padding: 11px 14px;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  border-radius: 0;
+  margin-bottom: 8px;
+}
+
+.val-select:focus {
+  border-color: var(--amber);
+  box-shadow: 3px 3px 0 var(--amber-dark);
+}
+
+.val-badge-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.val-badge {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  padding: 3px 8px;
+  border: 1.5px solid;
+  letter-spacing: 0.04em;
+}
+
+.val-badge-pos { border-color: var(--crimson); color: var(--crimson); background: #fdf2f0; }
+.val-badge-neg { border-color: var(--teal);    color: var(--teal);    background: #f0fdf8; }
+.val-badge-neu { border-color: var(--line2);   color: #888;           background: var(--paper); }
+
+/* Valencia diagram */
+.val-diagram {
+  margin: 18px 0;
+  padding: 20px;
+  background: var(--paper2);
+  border: 2px solid var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  min-height: 100px;
+  box-shadow: var(--sh);
+}
+
+.val-atom-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.val-atom-circle {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  border: 3px solid var(--ink);
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 1.4rem;
+  color: var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  position: relative;
+}
+
+.val-atom-circle.atom-pos { background: #fdf2f0; border-color: var(--crimson); box-shadow: 3px 3px 0 var(--crimson); }
+.val-atom-circle.atom-neg { background: #f0fdf8; border-color: var(--teal);    box-shadow: 3px 3px 0 var(--teal);    }
+
+.val-atom-label {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: #777;
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+
+.val-atom-valence {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  font-weight: 400;
+  color: #999;
+}
+
+.val-bond-line {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.val-bond-dash {
+  width: 50px;
+  height: 3px;
+  background: repeating-linear-gradient(90deg, var(--ink) 0, var(--ink) 6px, transparent 6px, transparent 10px);
+}
+
+.val-bond-label {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Formula display */
+.val-formula-hero {
+  text-align: center;
+  margin: 16px 0;
+  padding: 20px;
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.val-formula-text {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 2.2rem;
+  letter-spacing: -0.01em;
+  color: var(--amber-light);
+  line-height: 1.2;
+}
+
+.val-formula-name {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: #888;
+  margin-top: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+/* AI Result cards */
+.val-result-container {
+  margin-top: 24px;
+}
+
+.val-section {
+  border: 2px solid var(--ink);
+  margin-bottom: 12px;
+  overflow: hidden;
+  box-shadow: 3px 3px 0 var(--line2);
+  transition: box-shadow 0.15s;
+}
+
+.val-section:hover { box-shadow: 4px 4px 0 var(--ink); }
+
+.val-section-head {
+  background: var(--ink);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.val-section-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.val-section-label {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--amber-light);
+  font-weight: 600;
+  flex: 1;
+}
+
+.val-section-chev {
+  font-size: 0.75rem;
+  color: #555;
+  transition: transform 0.2s;
+}
+
+.val-section.collapsed .val-section-chev { transform: rotate(-90deg); }
+.val-section.collapsed .val-section-body { display: none; }
+
+.val-section-body {
+  padding: 18px;
+  background: var(--paper);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: #444;
+  line-height: 1.8;
+}
+
+.val-prop-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.val-prop-item {
+  background: var(--paper2);
+  border: 1.5px solid var(--line2);
+  padding: 10px 12px;
+}
+
+.val-prop-key {
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--amber-dark);
+  margin-bottom: 4px;
+}
+
+.val-prop-val {
+  font-size: 0.75rem;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.val-market-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.val-country-tag {
+  background: var(--paper2);
+  border: 1.5px solid var(--line);
+  padding: 8px 10px;
+  font-size: 0.68rem;
+  text-align: center;
+  color: var(--ink);
+}
+
+.val-country-flag {
+  font-size: 1.1rem;
+  display: block;
+  margin-bottom: 3px;
+}
+
+.val-loading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: #888;
+  background: var(--paper2);
+  border: 2px solid var(--line2);
+  margin-top: 16px;
+}
+
+.val-spinner {
+  width: 18px; height: 18px;
+  border: 2.5px solid var(--line2);
+  border-top-color: var(--amber);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.val-dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  background: var(--amber);
+  animation: blink 1s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.2;} }
+
+.val-info-strip {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.val-info-chip {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  padding: 5px 10px;
+  background: var(--paper2);
+  border: 1.5px solid var(--line2);
+  color: #666;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.val-info-chip strong { color: var(--ink); }
+
+/* possible compounds list */
+.val-compounds-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.val-compound-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--paper2);
+  border: 1.5px solid var(--line);
+  cursor: pointer;
+  transition: all 0.15s;
+  border-radius: 0;
+}
+
+.val-compound-row:hover {
+  border-color: var(--amber);
+  background: var(--paper);
+  box-shadow: 2px 2px 0 var(--amber-dark);
+}
+
+.val-compound-formula {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--amber-dark);
+  min-width: 80px;
+}
+
+.val-compound-name {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--ink);
+  flex: 1;
+}
+
+.val-compound-type {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.val-cta {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: var(--amber-dark);
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+  body { flex-direction: column; }
+  .sidebar { width: 100%; height: auto; flex-direction: row; align-items: center; padding: 16px; min-width: unset; position: relative; }
+  .sidebar-logo { padding: 0 20px 0 0; border-bottom: none; border-right: 1px solid #333; margin-bottom: 0; }
+  .sidebar-footer { display: none; }
+  .main::before { width: 100%; }
+  .topbar { padding: 14px 20px; }
+  .content { padding: 24px 20px 40px; }
+  .en-grid { grid-template-columns: 1fr; }
+  .en-analysis-card { grid-column: span 1; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ── -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-title">Jonathan<br>Paniagua</div>
+    <div class="sidebar-logo-sub">Química · ITD</div>
+  </div>
+
+  <div class="sidebar-label">Módulos</div>
+
+  <div class="nav-item active" onclick="switchPanel('redox', this)" data-panel="redox">
+    <span class="nav-num">01</span>
+    Redox
+  </div>
+  <div class="nav-item" onclick="switchPanel('en', this)" data-panel="en">
+    <span class="nav-num">02</span>
+    Electronegatividad
+  </div>
+  <div class="nav-item" onclick="switchPanel('valencia', this)" data-panel="valencia">
+    <span class="nav-num">03</span>
+    Valencia
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="sidebar-footer-label">Jonathan Paniagua</div>
+    <div class="sidebar-version"></div>
+  </div>
+</aside>
+
+<!-- ── MAIN ── -->
+<main class="main">
+
+  <div class="topbar">
+    <div class="topbar-title"><em>Química</em></div>
+    <div class="topbar-badge">QUIMICA ITD</div>
+  </div>
+
+  <div class="content">
+
+    <!-- ═══════════════════════════════ PANEL 1: REDOX ═══════════════════════════════ -->
+    <div id="panel-redox" class="panel active">
+
+      <div class="sect-head">
+        <span class="sect-num">01 —</span>
+        <h1 class="sect-title">Balanceo Redox</h1>
+        <span class="sect-desc">Método ion-electrón</span>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Ecuación química</div>
+        <input id="eq-input" type="text"
+          placeholder="ej: MnO4^- + Fe^2+ -> Mn^2+ + Fe^3+"
+          spellcheck="false" autocomplete="off"
+          onkeydown="if(event.key==='Enter') runBalancer()">
+        <div class="input-hint">
+          Carga con <code>^</code>&nbsp;&nbsp;·&nbsp;&nbsp;Flecha: <code>-&gt;</code>&nbsp;&nbsp;·&nbsp;&nbsp;Separa con <code>+</code>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Medio de reacción</div>
+        <div class="medium-toggle">
+          <button class="med-opt active" onclick="selectMedium('acid', this)">Ácido (H⁺)</button>
+          <button class="med-opt" onclick="selectMedium('base', this)">Básico (OH⁻)</button>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">Reacciones de referencia</div>
+        <div class="examples-strip">
+          <button class="ex-tag" onclick="loadEx(0)">MnO4⁻ + Fe²⁺</button>
+          <button class="ex-tag" onclick="loadEx(1)">Cr2O7²⁻ + I⁻</button>
+          <button class="ex-tag" onclick="loadEx(2)">MnO4⁻ + H2O2</button>
+          <button class="ex-tag" onclick="loadEx(3)">Fe + NO3⁻</button>
+          <button class="ex-tag" onclick="loadEx(4)">Cu + NO3⁻</button>
+          <button class="ex-tag" onclick="loadEx(5)">Cl2 (básico)</button>
+          <button class="ex-tag" onclick="loadEx(6)">Zn + NO3⁻ (b)</button>
+          <button class="ex-tag" onclick="loadEx(7)">MnO4⁻ + SO3²⁻</button>
+          <button class="ex-tag" onclick="loadEx(8)">Cr2O7²⁻ + Fe²⁺</button>
+          <button class="ex-tag" onclick="loadEx(9)">H2S + HNO3</button>
+          <button class="ex-tag" onclick="loadEx(10)">Pb + PbO2</button>
+          <button class="ex-tag" onclick="loadEx(11)">KMnO4 + KI</button>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="runBalancer()">→ Balancear</button>
+        <button class="btn btn-secondary" onclick="clearRedox()">Limpiar</button>
+      </div>
+
+      <div id="redox-msg"></div>
+
+      <div id="redox-results" class="results-area" style="display:none;"></div>
+
+    </div>
+
+    <!-- ═══════════════════════════════ PANEL 2: EN ═══════════════════════════════ -->
+    <div id="panel-en" class="panel">
+
+      <div class="sect-head">
+        <span class="sect-num">02 —</span>
+        <h1 class="sect-title">Electronegatividad</h1>
+        <span class="sect-desc">Escala de Pauling</span>
+      </div>
+
+      <!-- Single element -->
+      <div class="field-group">
+        <div class="field-label">Consultar un elemento</div>
+        <div style="display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;">
+          <div class="el-search-wrap" style="flex:1;min-width:200px;">
+            <input type="text" id="en-single-input"
+              placeholder="Símbolo o nombre (Fe, Cloro…)"
+              oninput="filterElements(this.value, 'en-dropdown-single')"
+              onfocus="filterElements(this.value, 'en-dropdown-single')"
+              onblur="setTimeout(()=>closeDropdown('en-dropdown-single'),200)"
+              autocomplete="off">
+            <div class="el-dropdown" id="en-dropdown-single"></div>
+          </div>
+          <button class="btn btn-primary" onclick="calcSingle()">→ Consultar</button>
+        </div>
+        <div id="en-single-result"></div>
+      </div>
+
+      <div class="ruled-divider">comparar par de elementos</div>
+
+      <!-- Pair comparison -->
+      <div class="field-group">
+        <div class="field-label">Comparar dos elementos — tipo de enlace</div>
+        <div style="display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;">
+          <div class="el-search-wrap" style="flex:1;min-width:150px;">
+            <input type="text" id="en-el1-input"
+              placeholder="Elemento 1"
+              oninput="filterElements(this.value,'en-dropdown-1')"
+              onfocus="filterElements(this.value,'en-dropdown-1')"
+              onblur="setTimeout(()=>closeDropdown('en-dropdown-1'),200)"
+              autocomplete="off">
+            <div class="el-dropdown" id="en-dropdown-1"></div>
+          </div>
+          <div class="el-search-wrap" style="flex:1;min-width:150px;">
+            <input type="text" id="en-el2-input"
+              placeholder="Elemento 2"
+              oninput="filterElements(this.value,'en-dropdown-2')"
+              onfocus="filterElements(this.value,'en-dropdown-2')"
+              onblur="setTimeout(()=>closeDropdown('en-dropdown-2'),200)"
+              autocomplete="off">
+            <div class="el-dropdown" id="en-dropdown-2"></div>
+          </div>
+          <button class="btn btn-primary" onclick="calcPair()">→ Comparar</button>
+        </div>
+        <div id="en-pair-result"></div>
+      </div>
+
+      <!-- Legend -->
+      <div class="pauling-legend">
+        <div class="pauling-header">Escala de Pauling (0 → 4.0)</div>
+        <div class="pauling-body">
+          <div class="pauling-bar"></div>
+          <div class="pauling-labels">
+            <span>0.7 Cs (mín)</span>
+            <span>1.0 Na</span>
+            <span>1.5 Al</span>
+            <span>2.0 C</span>
+            <span>2.5 N</span>
+            <span>3.0 Cl</span>
+            <span>3.5 O</span>
+            <span>4.0 F (máx)</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /panel-en -->
+
+    <!-- ═══════════════════════════════ PANEL 3: VALENCIA ═══════════════════════════════ -->
+    <div id="panel-valencia" class="panel">
+
+      <div class="sect-head">
+        <span class="sect-num">03 —</span>
+        <h1 class="sect-title">Valencia</h1>
+        <span class="sect-desc">Uniones &amp; Compuestos</span>
+      </div>
+
+      <!-- Atom selectors -->
+      <div class="field-group">
+        <div class="field-label">Selecciona dos elementos</div>
+        <div class="val-atom-grid">
+          <!-- Atom A -->
+          <div class="val-atom-slot">
+            <div class="val-slot-title">Átomo A (valencia positiva)</div>
+            <select class="val-select" id="val-atom-a" onchange="onValAtomChange('a')">
+              <option value="">— seleccionar —</option>
+            </select>
+            <div class="val-badge-row" id="val-badges-a"></div>
+          </div>
+          <!-- Atom B -->
+          <div class="val-atom-slot">
+            <div class="val-slot-title">Átomo B (valencia negativa)</div>
+            <select class="val-select" id="val-atom-b" onchange="onValAtomChange('b')">
+              <option value="">— seleccionar —</option>
+            </select>
+            <div class="val-badge-row" id="val-badges-b"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Possible compounds (static, shown before AI query) -->
+      <div class="field-group" id="val-combos-box" style="display:none;">
+        <div class="field-label">Posibles compuestos — haz clic para analizar</div>
+        <div class="val-compounds-list" id="val-combos-list"></div>
+        <div class="val-cta">↑ Selecciona un compuesto para obtener el análisis completo con IA</div>
+      </div>
+
+      <!-- Selected compound + diagram -->
+      <div id="val-diagram-box" style="display:none;">
+        <div class="field-group">
+          <div class="field-label">Compuesto seleccionado</div>
+          <div class="val-formula-hero" id="val-formula-hero"></div>
+          <div class="val-diagram" id="val-diagram"></div>
+          <div class="val-info-strip" id="val-info-strip"></div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="runValenciaAI()">→ Analizar con IA</button>
+          <button class="btn btn-secondary" onclick="clearValencia()">Limpiar</button>
+        </div>
+        <div id="val-msg"></div>
+      </div>
+
+      <!-- AI Results -->
+      <div id="val-results" class="val-result-container" style="display:none;"></div>
+
+    </div><!-- /panel-valencia -->
+
+  </div><!-- /content -->
+</main>
+
+<script>
+'use strict';
+
+/* ─────────────────────────────────────────────
+   NAV
+───────────────────────────────────────────── */
+function switchPanel(id, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  el.classList.add('active');
+}
+
+/* ─────────────────────────────────────────────
+   ELEMENT DATABASE
+───────────────────────────────────────────── */
+const ELEMENTS = {
+  H:  { name:'Hidrógeno',   en:2.20, period:1, group:1  },
+  He: { name:'Helio',       en:null, period:1, group:18 },
+  Li: { name:'Litio',       en:0.98, period:2, group:1  },
+  Be: { name:'Berilio',     en:1.57, period:2, group:2  },
+  B:  { name:'Boro',        en:2.04, period:2, group:13 },
+  C:  { name:'Carbono',     en:2.55, period:2, group:14 },
+  N:  { name:'Nitrógeno',   en:3.04, period:2, group:15 },
+  O:  { name:'Oxígeno',     en:3.44, period:2, group:16 },
+  F:  { name:'Flúor',       en:3.98, period:2, group:17 },
+  Ne: { name:'Neón',        en:null, period:2, group:18 },
+  Na: { name:'Sodio',       en:0.93, period:3, group:1  },
+  Mg: { name:'Magnesio',    en:1.31, period:3, group:2  },
+  Al: { name:'Aluminio',    en:1.61, period:3, group:13 },
+  Si: { name:'Silicio',     en:1.90, period:3, group:14 },
+  P:  { name:'Fósforo',     en:2.19, period:3, group:15 },
+  S:  { name:'Azufre',      en:2.58, period:3, group:16 },
+  Cl: { name:'Cloro',       en:3.16, period:3, group:17 },
+  Ar: { name:'Argón',       en:null, period:3, group:18 },
+  K:  { name:'Potasio',     en:0.82, period:4, group:1  },
+  Ca: { name:'Calcio',      en:1.00, period:4, group:2  },
+  Sc: { name:'Escandio',    en:1.36, period:4, group:3  },
+  Ti: { name:'Titanio',     en:1.54, period:4, group:4  },
+  V:  { name:'Vanadio',     en:1.63, period:4, group:5  },
+  Cr: { name:'Cromo',       en:1.66, period:4, group:6  },
+  Mn: { name:'Manganeso',   en:1.55, period:4, group:7  },
+  Fe: { name:'Hierro',      en:1.83, period:4, group:8  },
+  Co: { name:'Cobalto',     en:1.88, period:4, group:9  },
+  Ni: { name:'Níquel',      en:1.91, period:4, group:10 },
+  Cu: { name:'Cobre',       en:1.90, period:4, group:11 },
+  Zn: { name:'Zinc',        en:1.65, period:4, group:12 },
+  Ga: { name:'Galio',       en:1.81, period:4, group:13 },
+  Ge: { name:'Germanio',    en:2.01, period:4, group:14 },
+  As: { name:'Arsénico',    en:2.18, period:4, group:15 },
+  Se: { name:'Selenio',     en:2.55, period:4, group:16 },
+  Br: { name:'Bromo',       en:2.96, period:4, group:17 },
+  Kr: { name:'Kriptón',     en:3.00, period:4, group:18 },
+  Rb: { name:'Rubidio',     en:0.82, period:5, group:1  },
+  Sr: { name:'Estroncio',   en:0.95, period:5, group:2  },
+  Y:  { name:'Itrio',       en:1.22, period:5, group:3  },
+  Zr: { name:'Zirconio',    en:1.33, period:5, group:4  },
+  Nb: { name:'Niobio',      en:1.60, period:5, group:5  },
+  Mo: { name:'Molibdeno',   en:2.16, period:5, group:6  },
+  Tc: { name:'Tecnecio',    en:1.90, period:5, group:7  },
+  Ru: { name:'Rutenio',     en:2.20, period:5, group:8  },
+  Rh: { name:'Rodio',       en:2.28, period:5, group:9  },
+  Pd: { name:'Paladio',     en:2.20, period:5, group:10 },
+  Ag: { name:'Plata',       en:1.93, period:5, group:11 },
+  Cd: { name:'Cadmio',      en:1.69, period:5, group:12 },
+  In: { name:'Indio',       en:1.78, period:5, group:13 },
+  Sn: { name:'Estaño',      en:1.96, period:5, group:14 },
+  Sb: { name:'Antimonio',   en:2.05, period:5, group:15 },
+  Te: { name:'Teluro',      en:2.10, period:5, group:16 },
+  I:  { name:'Yodo',        en:2.66, period:5, group:17 },
+  Xe: { name:'Xenón',       en:2.60, period:5, group:18 },
+  Cs: { name:'Cesio',       en:0.79, period:6, group:1  },
+  Ba: { name:'Bario',       en:0.89, period:6, group:2  },
+  La: { name:'Lantano',     en:1.10, period:6, group:3  },
+  Ce: { name:'Cerio',       en:1.12, period:6, group:3  },
+  Pr: { name:'Praseodimio', en:1.13, period:6, group:3  },
+  Nd: { name:'Neodimio',    en:1.14, period:6, group:3  },
+  Pm: { name:'Prometio',    en:1.13, period:6, group:3  },
+  Sm: { name:'Samario',     en:1.17, period:6, group:3  },
+  Eu: { name:'Europio',     en:1.20, period:6, group:3  },
+  Gd: { name:'Gadolinio',   en:1.20, period:6, group:3  },
+  Tb: { name:'Terbio',      en:1.10, period:6, group:3  },
+  Dy: { name:'Disprosio',   en:1.22, period:6, group:3  },
+  Ho: { name:'Holmio',      en:1.23, period:6, group:3  },
+  Er: { name:'Erbio',       en:1.24, period:6, group:3  },
+  Tm: { name:'Tulio',       en:1.25, period:6, group:3  },
+  Yb: { name:'Iterbio',     en:1.10, period:6, group:3  },
+  Lu: { name:'Lutecio',     en:1.27, period:6, group:3  },
+  Hf: { name:'Hafnio',      en:1.30, period:6, group:4  },
+  Ta: { name:'Tántalo',     en:1.50, period:6, group:5  },
+  W:  { name:'Wolframio',   en:2.36, period:6, group:6  },
+  Re: { name:'Renio',       en:1.90, period:6, group:7  },
+  Os: { name:'Osmio',       en:2.20, period:6, group:8  },
+  Ir: { name:'Iridio',      en:2.20, period:6, group:9  },
+  Pt: { name:'Platino',     en:2.28, period:6, group:10 },
+  Au: { name:'Oro',         en:2.54, period:6, group:11 },
+  Hg: { name:'Mercurio',    en:2.00, period:6, group:12 },
+  Tl: { name:'Talio',       en:1.62, period:6, group:13 },
+  Pb: { name:'Plomo',       en:2.33, period:6, group:14 },
+  Bi: { name:'Bismuto',     en:2.02, period:6, group:15 },
+  Po: { name:'Polonio',     en:2.00, period:6, group:16 },
+  At: { name:'Astato',      en:2.20, period:6, group:17 },
+  Rn: { name:'Radón',       en:2.20, period:6, group:18 },
+  Fr: { name:'Francio',     en:0.70, period:7, group:1  },
+  Ra: { name:'Radio',       en:0.90, period:7, group:2  },
+  Ac: { name:'Actinio',     en:1.10, period:7, group:3  },
+  Th: { name:'Torio',       en:1.30, period:7, group:3  },
+  Pa: { name:'Protactinio', en:1.50, period:7, group:3  },
+  U:  { name:'Uranio',      en:1.38, period:7, group:3  },
+  Np: { name:'Neptunio',    en:1.36, period:7, group:3  },
+  Pu: { name:'Plutonio',    en:1.28, period:7, group:3  },
+  Am: { name:'Americio',    en:1.30, period:7, group:3  },
+  Cm: { name:'Curio',       en:1.28, period:7, group:3  },
+  Bk: { name:'Berkelio',    en:1.30, period:7, group:3  },
+  Cf: { name:'Californio',  en:1.30, period:7, group:3  },
+  Es: { name:'Einstenio',   en:1.30, period:7, group:3  },
+  Fm: { name:'Fermio',      en:1.30, period:7, group:3  },
+  Md: { name:'Mendelevio',  en:1.30, period:7, group:3  },
+  No: { name:'Nobelio',     en:1.30, period:7, group:3  },
+  Lr: { name:'Lawrencio',   en:1.30, period:7, group:3  },
+  Rf: { name:'Rutherfordio',en:null, period:7, group:4  },
+  Db: { name:'Dubnio',      en:null, period:7, group:5  },
+  Sg: { name:'Seaborgio',   en:null, period:7, group:6  },
+  Bh: { name:'Bohrio',      en:null, period:7, group:7  },
+  Hs: { name:'Hassio',      en:null, period:7, group:8  },
+  Mt: { name:'Meitnerio',   en:null, period:7, group:9  },
+  Ds: { name:'Darmstadtio', en:null, period:7, group:10 },
+  Rg: { name:'Roentgenio',  en:null, period:7, group:11 },
+  Cn: { name:'Copernicio',  en:null, period:7, group:12 },
+  Nh: { name:'Nihonio',     en:null, period:7, group:13 },
+  Fl: { name:'Flerovio',    en:null, period:7, group:14 },
+  Mc: { name:'Moscovio',    en:null, period:7, group:15 },
+  Lv: { name:'Livermorio',  en:null, period:7, group:16 },
+  Ts: { name:'Tennessino',  en:null, period:7, group:17 },
+  Og: { name:'Oganesón',    en:null, period:7, group:18 },
+};
+
+const EN_MAX = 4.0;
+
+/* ─────────────────────────────────────────────
+   REDOX — medium & examples
+───────────────────────────────────────────── */
+let currentMedium = 'acid';
+
+function selectMedium(val, btnEl) {
+  currentMedium = val;
+  document.querySelectorAll('.med-opt').forEach(b => b.classList.remove('active'));
+  btnEl.classList.add('active');
+}
+
+const EXAMPLES = [
+  { eq:'MnO4^- + Fe^2+ -> Mn^2+ + Fe^3+',        medium:'acid' },
+  { eq:'Cr2O7^2- + I^- -> Cr^3+ + I2',            medium:'acid' },
+  { eq:'MnO4^- + H2O2 -> Mn^2+ + O2',             medium:'acid' },
+  { eq:'Fe + NO3^- -> Fe^3+ + NO',                 medium:'acid' },
+  { eq:'Cu + NO3^- -> Cu^2+ + NO2',                medium:'acid' },
+  { eq:'Cl2 + OH^- -> Cl^- + ClO3^-',             medium:'base' },
+  { eq:'Zn + NO3^- -> ZnO2^2- + NH3',             medium:'base' },
+  { eq:'MnO4^- + SO3^2- -> Mn^2+ + SO4^2-',       medium:'acid' },
+  { eq:'Cr2O7^2- + Fe^2+ -> Cr^3+ + Fe^3+',       medium:'acid' },
+  { eq:'H2S + NO3^- -> S + NO',                    medium:'acid' },
+  { eq:'Pb + PbO2 + SO4^2- -> PbSO4',             medium:'acid' },
+  { eq:'MnO4^- + I^- -> Mn^2+ + I2',              medium:'acid' },
+];
+
+function loadEx(i) {
+  const ex = EXAMPLES[i];
+  document.getElementById('eq-input').value = ex.eq;
+  currentMedium = ex.medium;
+  document.querySelectorAll('.med-opt').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.med-opt')[ex.medium === 'acid' ? 0 : 1].classList.add('active');
+  document.getElementById('redox-results').style.display = 'none';
+  document.getElementById('redox-msg').innerHTML = '';
+}
+
+function clearRedox() {
+  document.getElementById('eq-input').value = '';
+  document.getElementById('redox-results').style.display = 'none';
+  document.getElementById('redox-msg').innerHTML = '';
+}
+
+/* ─────────────────────────────────────────────
+   CHEMISTRY ENGINE (unchanged)
+───────────────────────────────────────────── */
+const OX_RULES = {
+  'H':  { free:0, default:1  }, 'O':  { free:0, default:-2 },
+  'F':  { free:0, default:-1 }, 'Li': { free:0, default:1  },
+  'Na': { free:0, default:1  }, 'K':  { free:0, default:1  },
+  'Rb': { free:0, default:1  }, 'Cs': { free:0, default:1  },
+  'Ca': { free:0, default:2  }, 'Mg': { free:0, default:2  },
+  'Ba': { free:0, default:2  }, 'Sr': { free:0, default:2  },
+  'Cl': { free:0, default:-1 }, 'Br': { free:0, default:-1 },
+  'I':  { free:0, default:-1 }, 'Al': { free:0, default:3  },
+  'Zn': { free:0, default:2  }, 'Ag': { free:0, default:1  },
+  'Cu': { free:0, default:2  }, 'Fe': { free:0, default:3  },
+  'Ni': { free:0, default:2  }, 'Co': { free:0, default:2  },
+  'Pb': { free:0, default:2  }, 'Sn': { free:0, default:2  },
+  'Hg': { free:0, default:2  }, 'Au': { free:0, default:3  },
+  'Pt': { free:0, default:4  },
+};
+
+class ChemParser {
+  static parseFormula(rawFormula) {
+    let formula = rawFormula.trim();
+    let charge = 0;
+    const cm = formula.match(/\^([0-9]*)([+-])/);
+    if (cm) {
+      const num = cm[1] ? parseInt(cm[1]) : 1;
+      charge = num * (cm[2] === '+' ? 1 : -1);
+      formula = formula.replace(/\^[0-9]*[+-]/, '').trim();
+    }
+    if (formula === 'e' || formula === 'e-') return { atoms:{ e:1 }, charge:-1, raw:rawFormula };
+    return { atoms: ChemParser._parseFragment(formula, 1), charge, raw:rawFormula };
+  }
+  static _parseFragment(formula, multiplier) {
+    const result = {};
+    let i = 0;
+    while (i < formula.length) {
+      if (formula[i] === '(') {
+        let depth = 1, j = i+1;
+        while (j < formula.length && depth > 0) {
+          if (formula[j] === '(') depth++;
+          if (formula[j] === ')') depth--;
+          j++;
+        }
+        let subIdx = 1, k = j;
+        while (k < formula.length && /\d/.test(formula[k])) k++;
+        if (k > j) subIdx = parseInt(formula.slice(j, k));
+        const inner = ChemParser._parseFragment(formula.slice(i+1, j-1), multiplier * subIdx);
+        for (const [el, cnt] of Object.entries(inner)) result[el] = (result[el]||0) + cnt;
+        i = k;
+      } else if (/[A-Z]/.test(formula[i])) {
+        let j = i+1;
+        while (j < formula.length && /[a-z]/.test(formula[j])) j++;
+        const element = formula.slice(i, j);
+        let k = j;
+        while (k < formula.length && /\d/.test(formula[k])) k++;
+        const count = k > j ? parseInt(formula.slice(j, k)) : 1;
+        result[element] = (result[element]||0) + count * multiplier;
+        i = k;
+      } else { i++; }
+    }
+    return result;
+  }
+  static parseTerm(termStr) {
+    termStr = termStr.trim();
+    const cm = termStr.match(/^(\d+)(.+)$/);
+    let coeff = 1, formulaStr = termStr;
+    if (cm && /[A-Za-z]/.test(cm[2])) { coeff = parseInt(cm[1]); formulaStr = cm[2]; }
+    const parsed = ChemParser.parseFormula(formulaStr);
+    return { coeff, formula: formulaStr, parsed };
+  }
+  static parseEquation(eqStr) {
+    eqStr = eqStr.replace(/→|=>/g, '->').replace(/\s+/g, ' ').trim();
+    const sides = eqStr.split('->');
+    if (sides.length !== 2) throw new Error('No se encontró la flecha (->). Ejemplo: A + B -> C + D');
+    const parseTerms = (side) => {
+      const terms = [];
+      let buf = '', inCharge = false;
+      for (let i = 0; i < side.length; i++) {
+        const ch = side[i];
+        if (ch === '^') { inCharge = true; buf += ch; continue; }
+        if (inCharge) { buf += ch; if (ch === '+' || ch === '-') inCharge = false; continue; }
+        if (ch === '+') { const t = buf.trim(); if (t) terms.push(t); buf = ''; continue; }
+        buf += ch;
+      }
+      const last = buf.trim(); if (last) terms.push(last);
+      return terms.map(t => ChemParser.parseTerm(t));
+    };
+    return { reactants: parseTerms(sides[0]), products: parseTerms(sides[1]) };
+  }
+}
+
+class OxidationCalc {
+  static calculate(parsed) {
+    const { atoms, charge } = parsed;
+    const elements = Object.keys(atoms).filter(e => e !== 'e');
+    if (elements.length === 0) return {};
+    if (elements.length === 1) { const el = elements[0]; return { [el]: atoms[el] > 0 ? charge / atoms[el] : 0 }; }
+    const known = {}, unknown = [];
+    if (atoms['F']) known['F'] = -1;
+    if (atoms['O'] && !atoms['F']) {
+      if (atoms['O'] === 2 && atoms['H'] === 2 && elements.length === 2) known['O'] = -1;
+      else if (atoms['O'] === 2 && charge === -2 && elements.length === 1) known['O'] = -1;
+      else known['O'] = -2;
+    }
+    if (atoms['H']) {
+      const alkaline = ['Li','Na','K','Rb','Cs','Ca','Mg','Ba','Sr'];
+      const isHydride = alkaline.some(m => atoms[m]) && !atoms['O'] && !atoms['N'];
+      known['H'] = isHydride ? -1 : 1;
+    }
+    const fixed = { Li:1,Na:1,K:1,Rb:1,Cs:1,Fr:1,Ca:2,Mg:2,Ba:2,Sr:2,Ra:2,Be:2,Al:3,Ag:1,Zn:2,F:-1 };
+    for (const el of elements) if (fixed[el] !== undefined && known[el] === undefined) known[el] = fixed[el];
+    for (const el of elements) if (known[el] === undefined) unknown.push(el);
+    let knownSum = 0;
+    for (const [el, ox] of Object.entries(known)) knownSum += ox * (atoms[el]||0);
+    if (unknown.length === 1) {
+      known[unknown[0]] = (charge - knownSum) / atoms[unknown[0]];
+    } else if (unknown.length > 1) {
+      let changed = true, remaining = [...unknown];
+      while (changed && remaining.length > 1) {
+        changed = false;
+        for (const el of [...remaining]) {
+          if (OX_RULES[el] !== undefined) {
+            known[el] = OX_RULES[el].default; knownSum += OX_RULES[el].default * atoms[el];
+            remaining = remaining.filter(e => e !== el); changed = true;
+          }
+        }
+      }
+      if (remaining.length === 1) known[remaining[0]] = (charge - knownSum) / atoms[remaining[0]];
+      else if (remaining.length > 1) {
+        const rem = (charge - knownSum) / remaining.reduce((s,el) => s+atoms[el], 0);
+        for (const el of remaining) known[el] = rem;
+      }
+    }
+    return known;
+  }
+  static format(ox) {
+    if (ox === undefined || isNaN(ox)) return '?';
+    if (ox === 0) return '0';
+    const r = Math.round(ox*100)/100;
+    return r > 0 ? `+${r}` : `${r}`;
+  }
+}
+
+class MatrixSolver {
+  static gcd(a,b) { return b===0 ? a : MatrixSolver.gcd(b, a%b); }
+  static lcm(a,b) { return (a*b)/MatrixSolver.gcd(a,b); }
+  static toFraction(x, tol=1e-6) {
+    if (Math.abs(x-Math.round(x))<tol) return [Math.round(x),1];
+    for (let d=2; d<=20; d++) { const n=Math.round(x*d); if (Math.abs(n/d-x)<tol) return [n,d]; }
+    return [Math.round(x*10),10];
+  }
+  static toSmallIntegers(vec) {
+    if (!vec || vec.every(v=>Math.abs(v)<1e-9)) return null;
+    const nonZero = vec.filter(v=>Math.abs(v)>1e-9);
+    if (!nonZero.length) return null;
+    const minAbs = Math.min(...nonZero.map(Math.abs));
+    const normalized = vec.map(v=>v/minAbs);
+    const fracs = normalized.map(v=>MatrixSolver.toFraction(v));
+    const dens = fracs.map(f=>f[1]);
+    const lcm = dens.reduce((a,b)=>MatrixSolver.lcm(a,b),1);
+    let ints = fracs.map(f=>Math.round((f[0]*lcm)/f[1]));
+    if (!ints.every(v=>v>=0)) ints=ints.map(v=>-v);
+    if (ints.every(v=>v<=0)) ints=ints.map(v=>-v);
+    const g = ints.reduce((a,b)=>MatrixSolver.gcd(Math.abs(a),Math.abs(b)),0);
+    if (g>1) ints=ints.map(v=>Math.round(v/g));
+    ints=ints.map(v=>Math.abs(v)===0?1:Math.abs(v));
+    return ints;
+  }
+  static nullspace(A) {
+    const cols=A[0].length, rows=A.length;
+    const AT=Array.from({length:cols},(_,j)=>Array.from({length:rows},(_,i)=>A[i][j]));
+    const augAT=AT.map((row,i)=>{ const id=Array(cols).fill(0); id[i]=1; return [...row,...id]; });
+    let pivot=0;
+    for (let col=0; col<rows&&pivot<cols; col++) {
+      let maxRow=pivot, maxVal=Math.abs(augAT[pivot][col]);
+      for (let r=pivot+1; r<cols; r++) { if (Math.abs(augAT[r][col])>maxVal){maxVal=Math.abs(augAT[r][col]);maxRow=r;} }
+      if (maxVal<1e-10) continue;
+      [augAT[pivot],augAT[maxRow]]=[augAT[maxRow],augAT[pivot]];
+      const div=augAT[pivot][col];
+      for (let c=0; c<augAT[0].length; c++) augAT[pivot][c]/=div;
+      for (let r=0; r<cols; r++) {
+        if (r===pivot) continue;
+        const factor=augAT[r][col];
+        if (Math.abs(factor)<1e-12) continue;
+        for (let c=0; c<augAT[0].length; c++) augAT[r][c]-=factor*augAT[pivot][c];
+      }
+      pivot++;
+    }
+    if (pivot===cols) return null;
+    const kRow=augAT[cols-1].slice(rows);
+    const sol=kRow.every(v=>Math.abs(v)<1e-8)?augAT[Math.max(0,cols-2)].slice(rows):kRow;
+    return MatrixSolver.toSmallIntegers(sol);
+  }
+}
+
+class RedoxEngine {
+  constructor(equation, medium='acid') { this.equation=equation; this.medium=medium; this.steps=[]; }
+  _termToSpecies(t) {
+    const atoms  = t.parsed ? {...t.parsed.atoms}  : {...t.atoms};
+    const charge = t.parsed ? t.parsed.charge       : t.charge;
+    const label  = t.formula || t.label || (t.parsed&&t.parsed.raw) || '?';
+    return { atoms, charge, coeff:t.coeff||1, label };
+  }
+  balance() {
+    this._log('INICIO','Parseando ecuación y calculando estados de oxidación...');
+    const allTerms=[...this.equation.reactants,...this.equation.products];
+    this.oxStates=this._computeAllOxStates(allTerms);
+    const changes=this._identifyRedoxChanges();
+    if (!changes||!changes.length) throw new Error('No se detectaron cambios de estado de oxidación. Verifica que sea una reacción REDOX.');
+    this._log('E.O. DETECTADOS',changes.map(c=>`${c.element}: ${OxidationCalc.format(c.oxFrom)} → ${OxidationCalc.format(c.oxTo)} (${c.type})`).join(' | '));
+    this.redoxChanges=changes;
+    const {oxidation,reduction}=this._buildHalfReactions(changes);
+    const balOx=this._balanceHalfReaction(oxidation,'oxidation');
+    const balRed=this._balanceHalfReaction(reduction,'reduction');
+    this._log('SEMIRREACCIÓN OXIDACIÓN',this._halfRxnToString(balOx));
+    this._log('SEMIRREACCIÓN REDUCCIÓN',this._halfRxnToString(balRed));
+    const {finalOx,finalRed,n}=this._equalizeElectrons(balOx,balRed);
+    this._log('ELECTRONES IGUALADOS',`${n} electrones transferidos`);
+    const combined=this._combineHalfReactions(finalOx,finalRed);
+    const simplified=this._simplify(combined);
+    this._log('ECUACIÓN COMBINADA',this._rxnToString(simplified));
+    const valid=this._verify(simplified);
+    this._log('VERIFICACIÓN',valid.ok?'✓ Masa y carga conservadas':'⚠ '+valid.issues.join(', '));
+    return {equation:simplified,oxidation:balOx,reduction:balRed,finalOx,finalRed,electronsN:n,oxStates:this.oxStates,redoxChanges:changes,verification:valid,steps:this.steps};
+  }
+  _computeAllOxStates(terms) {
+    const r={};
+    for (const t of terms) {
+      const key=t.parsed?t.parsed.raw:(t.label||t.formula);
+      try { r[key]={atoms:{...(t.parsed?t.parsed.atoms:t.atoms)},charge:t.parsed?t.parsed.charge:t.charge,ox:OxidationCalc.calculate(t.parsed||t)}; }
+      catch(e) { r[key]={atoms:{},charge:0,ox:{}}; }
+    }
+    return r;
+  }
+  _identifyRedoxChanges() {
+    const reactantMap={},productMap={};
+    const collect=(terms,map)=>{
+      for (const t of terms) {
+        const key=t.parsed?t.parsed.raw:(t.label||t.formula);
+        const data=this.oxStates[key]; if (!data) continue;
+        for (const [el,ox] of Object.entries(data.ox)) {
+          if (el==='e'||isNaN(ox)) continue;
+          if (!map[el]) map[el]=[];
+          map[el].push({ox,term:t,formula:key});
+        }
+      }
+    };
+    collect(this.equation.reactants,reactantMap);
+    collect(this.equation.products,productMap);
+    const changes=[];
+    for (const el of Object.keys(reactantMap)) {
+      if (!productMap[el]) continue;
+      let bestChange=null,bestDelta=0;
+      for (const re of reactantMap[el]) {
+        for (const pe of productMap[el]) {
+          const delta=Math.abs(re.ox-pe.ox);
+          if (delta>0.09&&delta>bestDelta) {
+            bestDelta=delta;
+            bestChange={element:el,oxFrom:re.ox,oxTo:pe.ox,type:re.ox<pe.ox?'oxidation':'reduction',reactTerm:re.term,prodTerm:pe.term};
+          }
+        }
+      }
+      if (bestChange) changes.push(bestChange);
+    }
+    this._detectDisproportionation(changes,reactantMap,productMap);
+    return changes;
+  }
+  _detectDisproportionation(changes,reactantMap,productMap) {
+    for (const el of Object.keys(reactantMap)) {
+      if (!productMap[el]) continue;
+      const rOxValues=[...new Set(reactantMap[el].map(e=>Math.round(e.ox*100)/100))];
+      const pEntries=productMap[el];
+      const pOxValues=[...new Set(pEntries.map(e=>Math.round(e.ox*100)/100))];
+      const existing=changes.filter(c=>c.element===el);
+      if (existing.length>=2) continue;
+      if (rOxValues.length===1&&pOxValues.length>=2) {
+        const rOx=rOxValues[0];
+        for (const pOx of pOxValues) {
+          if (Math.abs(pOx-rOx)<0.09) continue;
+          const type=rOx<pOx?'oxidation':'reduction';
+          if (!changes.find(c=>c.element===el&&c.type===type)) {
+            const pEntry=pEntries.find(e=>Math.abs(e.ox-pOx)<0.09);
+            changes.push({element:el,oxFrom:rOx,oxTo:pOx,type,reactTerm:reactantMap[el][0].term,prodTerm:pEntry.term});
+          }
+        }
+      }
+    }
+  }
+  _buildHalfReactions(changes) {
+    const oxChange=changes.find(c=>c.type==='oxidation');
+    const redChange=changes.find(c=>c.type==='reduction');
+    if (!oxChange&&!redChange) throw new Error('No se pudo identificar la oxidación ni la reducción.');
+    if (!oxChange) throw new Error(`Solo se detectó reducción (${redChange.element}). Falta la especie que se oxida.`);
+    if (!redChange) throw new Error(`Solo se detectó oxidación (${oxChange.element}). Falta la especie que se reduce.`);
+    const toFlat=(t)=>this._termToSpecies(t);
+    return {
+      oxidation:{reactants:[toFlat(oxChange.reactTerm)],products:[toFlat(oxChange.prodTerm)],type:'oxidation'},
+      reduction:{reactants:[toFlat(redChange.reactTerm)],products:[toFlat(redChange.prodTerm)],type:'reduction'},
+    };
+  }
+  _balanceHalfReaction(halfRxn,type) {
+    let r=halfRxn.reactants.map(sp=>({...sp,atoms:{...sp.atoms}}));
+    let p=halfRxn.products.map(sp=>({...sp,atoms:{...sp.atoms}}));
+    r=this._balanceAtomsBesidesOH(r,p);
+    const deltaO=this._countAtom(r,'O')-this._countAtom(p,'O');
+    if (deltaO>0) p.push({atoms:{H:2,O:1},charge:0,coeff:deltaO,label:'H2O'});
+    else if (deltaO<0) r.push({atoms:{H:2,O:1},charge:0,coeff:-deltaO,label:'H2O'});
+    const deltaH=this._countAtom(r,'H')-this._countAtom(p,'H');
+    if (this.medium==='acid') {
+      if (deltaH>0) p.push({atoms:{H:1},charge:1,coeff:deltaH,label:'H+'});
+      else if (deltaH<0) r.push({atoms:{H:1},charge:1,coeff:-deltaH,label:'H+'});
+    } else {
+      if (deltaH>0) { r.push({atoms:{O:1,H:1},charge:-1,coeff:deltaH,label:'OH-'}); p.push({atoms:{H:2,O:1},charge:0,coeff:deltaH,label:'H2O'}); }
+      else if (deltaH<0) { p.push({atoms:{O:1,H:1},charge:-1,coeff:-deltaH,label:'OH-'}); r.push({atoms:{H:2,O:1},charge:0,coeff:-deltaH,label:'H2O'}); }
+    }
+    const electrons=this._countCharge(r)-this._countCharge(p);
+    return {reactants:r,products:p,electrons,type};
+  }
+  _balanceAtomsBesidesOH(r,p) {
+    const rA={},pA={};
+    for (const sp of r) for (const [el,n] of Object.entries(sp.atoms)) if (el!=='O'&&el!=='H') rA[el]=(rA[el]||0)+n*sp.coeff;
+    for (const sp of p) for (const [el,n] of Object.entries(sp.atoms)) if (el!=='O'&&el!=='H') pA[el]=(pA[el]||0)+n*sp.coeff;
+    for (const [el,rn] of Object.entries(rA)) {
+      const pn=pA[el]||0;
+      if (pn===0||rn===pn) continue;
+      const ratio=rn/pn;
+      const roundRatio=Math.round(ratio);
+      const roundInv=Math.round(1/ratio);
+      if (Math.abs(ratio-roundRatio)<0.06&&roundRatio>1) for (const sp of p) sp.coeff*=roundRatio;
+      else if (ratio<1&&Math.abs(1/ratio-roundInv)<0.06&&roundInv>1) for (const sp of r) sp.coeff*=roundInv;
+    }
+    return r;
+  }
+  _countAtom(side,el) { return side.reduce((s,sp)=>s+(sp.atoms[el]||0)*sp.coeff,0); }
+  _countCharge(side) { return side.reduce((s,sp)=>s+sp.charge*sp.coeff,0); }
+  _equalizeElectrons(ox,red) {
+    const nOx=Math.abs(ox.electrons),nRed=Math.abs(red.electrons);
+    if (!nOx||!nRed) throw new Error('No se transfieren electrones. Verifica la reacción.');
+    const lcm=MatrixSolver.lcm(nOx,nRed);
+    const scale=(half,mult)=>mult===1?half:{...half,reactants:half.reactants.map(sp=>({...sp,coeff:sp.coeff*mult})),products:half.products.map(sp=>({...sp,coeff:sp.coeff*mult})),electrons:half.electrons*mult};
+    return {finalOx:scale(ox,lcm/nOx),finalRed:scale(red,lcm/nRed),n:lcm};
+  }
+  _combineHalfReactions(ox,red) {
+    const combo=(terms)=>{
+      const m={};
+      for (const sp of terms) { if (!m[sp.label]) m[sp.label]={...sp,atoms:{...sp.atoms},coeff:0}; m[sp.label].coeff+=sp.coeff; }
+      return Object.values(m).filter(sp=>sp.coeff>0);
+    };
+    const cancel=(left,right)=>{
+      const lm={},rm={};
+      for (const sp of left) lm[sp.label]={...sp,atoms:{...sp.atoms}};
+      for (const sp of right) rm[sp.label]={...sp,atoms:{...sp.atoms}};
+      for (const key of Object.keys(lm)) {
+        if (!rm[key]) continue;
+        const diff=lm[key].coeff-rm[key].coeff;
+        if (diff>0){lm[key].coeff=diff;delete rm[key];}
+        else if (diff<0){rm[key].coeff=-diff;delete lm[key];}
+        else{delete lm[key];delete rm[key];}
+      }
+      return {left:Object.values(lm),right:Object.values(rm)};
+    };
+    const {left:rcts,right:prds}=cancel(combo([...ox.reactants,...red.reactants]),combo([...ox.products,...red.products]));
+    return {reactants:rcts,products:prds};
+  }
+  _simplify(rxn) {
+    const g=[...rxn.reactants,...rxn.products].map(sp=>sp.coeff).reduce((a,b)=>MatrixSolver.gcd(Math.abs(a),Math.abs(b)),0);
+    if (g<=1) return rxn;
+    return {reactants:rxn.reactants.map(sp=>({...sp,coeff:Math.round(sp.coeff/g)})),products:rxn.products.map(sp=>({...sp,coeff:Math.round(sp.coeff/g)}))};
+  }
+  _verify(rxn) {
+    const issues=[];
+    const count=(side)=>{const m={};for(const sp of side) for(const [el,n] of Object.entries(sp.atoms)) m[el]=(m[el]||0)+n*sp.coeff;return m;};
+    const rA=count(rxn.reactants),pA=count(rxn.products);
+    const elements=new Set([...Object.keys(rA),...Object.keys(pA)]);
+    const atomCheck={};
+    for (const el of elements){const rn=rA[el]||0,pn=pA[el]||0;atomCheck[el]={left:rn,right:pn,ok:rn===pn};if(rn!==pn)issues.push(`${el}: ${rn} ≠ ${pn}`);}
+    const rC=rxn.reactants.reduce((s,sp)=>s+sp.charge*sp.coeff,0);
+    const pC=rxn.products.reduce((s,sp)=>s+sp.charge*sp.coeff,0);
+    if(rC!==pC)issues.push(`Carga: ${rC} ≠ ${pC}`);
+    return {ok:issues.length===0,issues,atomCheck,charges:{left:rC,right:pC,ok:rC===pC}};
+  }
+  _halfRxnToString(half) {
+    const ss=(side)=>side.map(sp=>`${sp.coeff>1?sp.coeff:''}${sp.label}`).join(' + ');
+    const nE=Math.abs(half.electrons);
+    return half.electrons>0?`${ss(half.reactants)} → ${ss(half.products)} + ${nE}e⁻`:`${ss(half.reactants)} + ${nE}e⁻ → ${ss(half.products)}`;
+  }
+  _rxnToString(rxn) {
+    const ss=(t)=>t.map(sp=>`${sp.coeff>1?sp.coeff:''}${sp.label}`).join(' + ');
+    return `${ss(rxn.reactants)} → ${ss(rxn.products)}`;
+  }
+  _log(title,detail){this.steps.push({title,detail});}
+}
+
+/* ─────────────────────────────────────────────
+   REDOX UI
+───────────────────────────────────────────── */
+function showRedoxMsg(text, type) {
+  document.getElementById('redox-msg').innerHTML = `<div class="msg msg-${type}">${text}</div>`;
+}
+
+function runBalancer() {
+  document.getElementById('redox-msg').innerHTML = '';
+  document.getElementById('redox-results').style.display = 'none';
+  const input = document.getElementById('eq-input').value.trim();
+  if (!input) { showRedoxMsg('⚠ Ingresa una ecuación química.', 'error'); return; }
+  try {
+    const equation = ChemParser.parseEquation(input);
+    if (!equation.reactants.length || !equation.products.length) throw new Error('La ecuación necesita al menos un reactivo y un producto.');
+    const engine = new RedoxEngine(equation, currentMedium);
+    const result = engine.balance();
+    renderRedoxResult(result, document.getElementById('redox-results'));
+  } catch(err) {
+    showRedoxMsg('⚠ ' + err.message, 'error');
+  }
+}
+
+function sideStr(terms) {
+  return terms.map(sp => `${sp.coeff > 1 ? sp.coeff : ''}${sp.label}`).join(' + ');
+}
+
+function renderRedoxResult(r, container) {
+  // ── helpers ──
+  const fmt = (ox) => ox === 0 ? '0' : (ox > 0 ? '+'+ox : ''+ox);
+  const fmtTerm = (sp) => `${sp.coeff > 1 ? sp.coeff : ''}${sp.label}`;
+  const sideStr = (terms) => terms.map(fmtTerm).join(' + ');
+
+  // Equation string
+  const left  = r.equation.reactants.map(fmtTerm).join(' + ');
+  const right = r.equation.products.map(fmtTerm).join(' + ');
+  const eqStr = `${left}  →  ${right}`;
+
+  // Ox states map
+  const elemMap = {};
+  let idx = 1;
+  for (const [, data] of Object.entries(r.oxStates)) {
+    for (const [el, ox] of Object.entries(data.ox || {})) {
+      if (el === 'e') continue;
+      if (!elemMap[el]) elemMap[el] = { entries: [], idx: idx++ };
+      elemMap[el].entries.push(ox);
+    }
+  }
+  const oxEl  = (r.redoxChanges.find(c => c.type === 'oxidation') || {}).element;
+  const redEl = (r.redoxChanges.find(c => c.type === 'reduction') || {}).element;
+  const oxCh  = r.redoxChanges.find(c => c.type === 'oxidation');
+  const redCh = r.redoxChanges.find(c => c.type === 'reduction');
+
+  // Half-reactions
+  const nEox  = Math.abs(r.finalOx.electrons);
+  const nEred = Math.abs(r.finalRed.electrons);
+  const oxHalfStr  = r.finalOx.electrons  > 0
+    ? `${sideStr(r.finalOx.reactants)} → ${sideStr(r.finalOx.products)} + ${nEox}e⁻`
+    : `${sideStr(r.finalOx.reactants)} + ${nEox}e⁻ → ${sideStr(r.finalOx.products)}`;
+  const redHalfStr = r.finalRed.electrons > 0
+    ? `${sideStr(r.finalRed.reactants)} → ${sideStr(r.finalRed.products)} + ${nEred}e⁻`
+    : `${sideStr(r.finalRed.reactants)} + ${nEred}e⁻ → ${sideStr(r.finalRed.products)}`;
+
+  // Verification data
+  const allChecks = [
+    { el: 'Carga', d: r.verification.charges },
+    ...Object.entries(r.verification.atomCheck).map(([el, d]) => ({ el, d }))
+  ];
+  const maxVal = Math.max(...allChecks.map(c => Math.max(c.d.left || 0, c.d.right || 0, 1)));
+
+  // ── OX TILES ──
+  const oxTiles = Object.entries(elemMap).map(([el, info]) => {
+    const isOx  = el === oxEl;
+    const isRed = el === redEl;
+    const cls   = isOx ? 'is-ox' : (isRed ? 'is-red' : '');
+    const unique = [...new Set(info.entries.map(fmt))];
+    const valStr = unique.join(' → ');
+    const badge  = isOx  ? '<span class="ox-tile-badge">OX</span>'
+                 : isRed ? '<span class="ox-tile-badge">RED</span>'
+                 : '';
+    return `<div class="ox-tile ${cls}">
+      <div class="ox-tile-idx">${info.idx}</div>
+      <div class="ox-tile-sym">${el}</div>
+      <div class="ox-tile-val">${valStr}</div>
+      ${badge}
+    </div>`;
+  }).join('');
+
+  // ── VERIFY TABLE ROWS ──
+  const vRows = allChecks.map(({ el, d }) => {
+    const pct = Math.round((Math.min(d.left, d.right) / maxVal) * 100);
+    const fcls = d.ok ? 'ok' : 'fail';
+    return `<tr>
+      <td class="vt-el">${el}</td>
+      <td class="vt-bar-cell">
+        <div class="vt-bar-row">
+          <span>${d.left}</span>
+          <div class="vt-track"><div class="vt-fill ${fcls}" style="width:0" data-w="${pct}%"></div></div>
+          <span>${d.right}</span>
+        </div>
+      </td>
+      <td class="vt-check"><span class="${d.ok?'vt-ok':'vt-fail'}">${d.ok?'✓':'✗'}</span></td>
+    </tr>`;
+  }).join('');
+
+  // ── STEPS ──
+  const stepRows = r.steps.map((s, i) => `
+    <div class="step-row">
+      <div class="step-num-col">${String(i+1).padStart(2,'0')}</div>
+      <div class="step-content-col">
+        <div class="step-title-txt">${s.title}</div>
+        <div class="step-detail-txt">${s.detail}</div>
+      </div>
+    </div>`).join('');
+
+  const redoxLabel = oxCh && redCh ? `${oxEl}/${redEl}` : '—';
+  const redoxSub   = oxCh && redCh
+    ? `<span style="color:var(--crimson)">${oxEl}</span> → OX &nbsp;·&nbsp; <span style="color:var(--teal)">${redEl}</span> → RED`
+    : '';
+
+  container.innerHTML = `
+    <!-- Hero -->
+    <div class="res-hero">
+      <div class="res-hero-topbar">
+        <div class="res-hero-label">Ecuación Balanceada</div>
+        <button class="btn btn-secondary btn-sm"
+          onclick="copyText(this.closest('.res-hero').querySelector('.eq-display').textContent.trim())">
+          Copiar
+        </button>
+      </div>
+      <div class="res-hero-body">
+        <div class="eq-display">${eqStr}</div>
+      </div>
+    </div>
+
+    <!-- Stats row -->
+    <div class="res-stats">
+      <div class="stat-card sc-electrons">
+        <span class="stat-icon">⚡</span>
+        <div class="stat-value">${r.electronsN}</div>
+        <div class="stat-label">e⁻ transferidos</div>
+        <div class="stat-sub">
+          ${oxCh ? `<span style="color:var(--crimson)">${oxEl}</span>: ${fmt(oxCh.oxFrom)}→${fmt(oxCh.oxTo)}` : ''}
+        </div>
+      </div>
+      <div class="stat-card sc-redox">
+        <span class="stat-icon">⇌</span>
+        <div class="stat-value" style="font-size:1.3rem;">${redoxLabel}</div>
+        <div class="stat-label">Par redox</div>
+        <div class="stat-sub">${redoxSub}</div>
+      </div>
+      <div class="stat-card ${r.verification.ok ? 'sc-ok' : 'sc-fail'}">
+        <span class="stat-icon">${r.verification.ok ? '✓' : '⚠'}</span>
+        <div class="stat-value ${r.verification.ok ? 'sv-ok' : 'sv-fail'}">${r.verification.ok ? 'OK' : 'Error'}</div>
+        <div class="stat-label">Balance</div>
+        <div class="stat-sub">${r.verification.ok ? 'Átomos y cargas OK' : r.verification.issues.join(', ')}</div>
+      </div>
+    </div>
+
+    <!-- Main grid -->
+    <div class="res-grid">
+
+      <!-- Oxidation states -->
+      <div class="res-panel">
+        <div class="res-panel-head">
+          <div class="res-panel-head-label">Estados de Oxidación</div>
+          <div class="res-panel-badge">E.O.</div>
+        </div>
+        <div class="res-panel-body">
+          <div class="ox-tiles">${oxTiles}</div>
+        </div>
+      </div>
+
+      <!-- Half-reactions -->
+      <div class="res-panel">
+        <div class="res-panel-head">
+          <div class="res-panel-head-label">Semirreacciones</div>
+          <div class="res-panel-badge">Ion-e⁻</div>
+        </div>
+        <div class="res-panel-body">
+          <div class="half-cards">
+            <div class="half-card hc-ox">
+              <div class="half-card-head">▲ Oxidación — pierde e⁻</div>
+              <div class="half-card-body">
+                ${oxHalfStr}
+                <div class="half-card-electrons">⚡ ${nEox} electrón${nEox>1?'es':''}</div>
+              </div>
+            </div>
+            <div class="half-card hc-red">
+              <div class="half-card-head">▼ Reducción — gana e⁻</div>
+              <div class="half-card-body">
+                ${redHalfStr}
+                <div class="half-card-electrons">⚡ ${nEred} electrón${nEred>1?'es':''}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Verification (full width) -->
+      <div class="res-panel res-grid-full">
+        <div class="res-panel-head">
+          <div class="res-panel-head-label">Verificación de Balance</div>
+          <div class="res-panel-badge">Izq / Der</div>
+        </div>
+        <div class="res-panel-body">
+          <div class="verify-summary ${r.verification.ok ? 'vs-ok' : 'vs-fail'}">
+            <span>${r.verification.ok ? '✓' : '⚠'}</span>
+            <span>${r.verification.ok ? 'Ecuación completamente balanceada' : 'Desbalances: ' + r.verification.issues.join(', ')}</span>
+          </div>
+          <table class="verify-table">
+            <thead>
+              <tr>
+                <th>Elemento</th>
+                <th>Izq → Der</th>
+                <th style="text-align:center">✓</th>
+              </tr>
+            </thead>
+            <tbody>${vRows}</tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- /res-grid -->
+
+    <!-- Steps (collapsible) -->
+    <div class="res-panel res-collapsible">
+      <div class="res-panel-head res-collapsible-head" onclick="this.closest('.res-collapsible').classList.toggle('collapsed')">
+        <div class="res-panel-head-label">Procedimiento Paso a Paso</div>
+        <div class="res-panel-badge">${r.steps.length} pasos</div>
+        <span class="res-collapsible-chevron" style="margin-left:8px;">▾</span>
+      </div>
+      <div class="res-panel-body" style="padding:0;">
+        <div class="steps-timeline">${stepRows}</div>
+      </div>
+    </div>
+  `;
+
+  container.style.display = 'block';
+
+  // Animate progress bars after paint
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      container.querySelectorAll('[data-w]').forEach(el => {
+        el.style.width = el.dataset.w;
+      });
+    }, 80);
+  });
+}
+
+function rBlock(label, bodyHTML, collapsed = false) {
+  return `<div class="result-block${collapsed?' collapsed':''}">
+    <div class="result-header">
+      <span class="result-header-label">${label}</span>
+      <span class="result-chevron">▾</span>
+    </div>
+    <div class="result-body">${bodyHTML}</div>
+  </div>`;
+}
+
+function copyText(txt) {
+  if (navigator.clipboard) navigator.clipboard.writeText(txt).then(()=>showRedoxMsg('✓ Copiado al portapapeles','success'));
+  else { const ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); showRedoxMsg('✓ Copiado','success'); }
+}
+
+/* ═══════════════════════════════════════════════════
+   MÓDULO 03 — VALENCIA
+   Identifica uniones entre átomos con valencias de
+   signos opuestos y consulta IA para análisis completo
+═══════════════════════════════════════════════════ */
+
+// ── Valencia data ──────────────────────────────────
+// Each element has: name, symbol, valences (array),
+// category (metal/nonmetal/metalloid)
+const VALENCIA_ATOMS = [
+  // Metals (positive valences)
+  { sym:'H',  name:'Hidrógeno',  valences:[1,-1],       cat:'nometal'   },
+  { sym:'Li', name:'Litio',      valences:[1],           cat:'metal'     },
+  { sym:'Na', name:'Sodio',      valences:[1],           cat:'metal'     },
+  { sym:'K',  name:'Potasio',    valences:[1],           cat:'metal'     },
+  { sym:'Mg', name:'Magnesio',   valences:[2],           cat:'metal'     },
+  { sym:'Ca', name:'Calcio',     valences:[2],           cat:'metal'     },
+  { sym:'Ba', name:'Bario',      valences:[2],           cat:'metal'     },
+  { sym:'Al', name:'Aluminio',   valences:[3],           cat:'metal'     },
+  { sym:'Fe', name:'Hierro',     valences:[2,3],         cat:'metal'     },
+  { sym:'Cu', name:'Cobre',      valences:[1,2],         cat:'metal'     },
+  { sym:'Zn', name:'Zinc',       valences:[2],           cat:'metal'     },
+  { sym:'Ag', name:'Plata',      valences:[1],           cat:'metal'     },
+  { sym:'Pb', name:'Plomo',      valences:[2,4],         cat:'metal'     },
+  { sym:'Sn', name:'Estaño',     valences:[2,4],         cat:'metal'     },
+  { sym:'Ni', name:'Níquel',     valences:[2,3],         cat:'metal'     },
+  { sym:'Co', name:'Cobalto',    valences:[2,3],         cat:'metal'     },
+  { sym:'Mn', name:'Manganeso',  valences:[2,4,7],       cat:'metal'     },
+  { sym:'Cr', name:'Cromo',      valences:[2,3,6],       cat:'metal'     },
+  { sym:'Hg', name:'Mercurio',   valences:[1,2],         cat:'metal'     },
+  { sym:'Au', name:'Oro',        valences:[1,3],         cat:'metal'     },
+  { sym:'Pt', name:'Platino',    valences:[2,4],         cat:'metal'     },
+  { sym:'Ti', name:'Titanio',    valences:[2,3,4],       cat:'metal'     },
+  // Nonmetals (negative or variable valences)
+  { sym:'O',  name:'Oxígeno',    valences:[-2],          cat:'nometal'   },
+  { sym:'S',  name:'Azufre',     valences:[-2,4,6],      cat:'nometal'   },
+  { sym:'F',  name:'Flúor',      valences:[-1],          cat:'nometal'   },
+  { sym:'Cl', name:'Cloro',      valences:[-1,1,3,5,7],  cat:'nometal'   },
+  { sym:'Br', name:'Bromo',      valences:[-1,1,3,5],    cat:'nometal'   },
+  { sym:'I',  name:'Yodo',       valences:[-1,1,3,5,7],  cat:'nometal'   },
+  { sym:'N',  name:'Nitrógeno',  valences:[-3,1,2,3,4,5],cat:'nometal'  },
+  { sym:'P',  name:'Fósforo',    valences:[-3,3,5],      cat:'nometal'   },
+  { sym:'C',  name:'Carbono',    valences:[-4,2,4],      cat:'nometal'   },
+  { sym:'Si', name:'Silicio',    valences:[-4,4],        cat:'metaloide' },
+  { sym:'Se', name:'Selenio',    valences:[-2,4,6],      cat:'nometal'   },
+  { sym:'Te', name:'Teluro',     valences:[-2,4,6],      cat:'metaloide' },
+  { sym:'As', name:'Arsénico',   valences:[-3,3,5],      cat:'metaloide' },
+];
+
+// Known compound lookup for common pairs (formula, name, bondType)
+// Key: "SYMA_va+SYMB_vb"  (sorted by formula logic)
+const KNOWN_COMPOUNDS = {
+  'NaCl':  { formula:'NaCl',   name:'Cloruro de Sodio',       bond:'Iónico'   },
+  'KCl':   { formula:'KCl',    name:'Cloruro de Potasio',     bond:'Iónico'   },
+  'CaCl2': { formula:'CaCl2',  name:'Cloruro de Calcio',      bond:'Iónico'   },
+  'MgCl2': { formula:'MgCl2',  name:'Cloruro de Magnesio',    bond:'Iónico'   },
+  'AlCl3': { formula:'AlCl3',  name:'Cloruro de Aluminio',    bond:'Iónico'   },
+  'FeCl2': { formula:'FeCl2',  name:'Cloruro Ferroso',        bond:'Iónico'   },
+  'FeCl3': { formula:'FeCl3',  name:'Cloruro Férrico',        bond:'Iónico'   },
+  'CuCl':  { formula:'CuCl',   name:'Cloruro Cuproso',        bond:'Iónico'   },
+  'CuCl2': { formula:'CuCl2',  name:'Cloruro Cúprico',        bond:'Iónico'   },
+  'ZnCl2': { formula:'ZnCl2',  name:'Cloruro de Zinc',        bond:'Iónico'   },
+  'AgCl':  { formula:'AgCl',   name:'Cloruro de Plata',       bond:'Iónico'   },
+  'PbCl2': { formula:'PbCl2',  name:'Cloruro de Plomo(II)',   bond:'Iónico'   },
+  'NaF':   { formula:'NaF',    name:'Fluoruro de Sodio',      bond:'Iónico'   },
+  'CaF2':  { formula:'CaF2',   name:'Fluoruro de Calcio',     bond:'Iónico'   },
+  'AlF3':  { formula:'AlF3',   name:'Fluoruro de Aluminio',   bond:'Iónico'   },
+  'NaI':   { formula:'NaI',    name:'Yoduro de Sodio',        bond:'Iónico'   },
+  'KI':    { formula:'KI',     name:'Yoduro de Potasio',      bond:'Iónico'   },
+  'NaBr':  { formula:'NaBr',   name:'Bromuro de Sodio',       bond:'Iónico'   },
+  'KBr':   { formula:'KBr',    name:'Bromuro de Potasio',     bond:'Iónico'   },
+  'Na2O':  { formula:'Na2O',   name:'Óxido de Sodio',         bond:'Iónico'   },
+  'K2O':   { formula:'K2O',    name:'Óxido de Potasio',       bond:'Iónico'   },
+  'CaO':   { formula:'CaO',    name:'Óxido de Calcio',        bond:'Iónico'   },
+  'MgO':   { formula:'MgO',    name:'Óxido de Magnesio',      bond:'Iónico'   },
+  'Al2O3': { formula:'Al2O3',  name:'Óxido de Aluminio',      bond:'Iónico'   },
+  'Fe2O3': { formula:'Fe2O3',  name:'Óxido Férrico',          bond:'Iónico'   },
+  'FeO':   { formula:'FeO',    name:'Óxido Ferroso',          bond:'Iónico'   },
+  'CuO':   { formula:'CuO',    name:'Óxido Cúprico',          bond:'Iónico'   },
+  'ZnO':   { formula:'ZnO',    name:'Óxido de Zinc',          bond:'Iónico'   },
+  'TiO2':  { formula:'TiO2',   name:'Dióxido de Titanio',     bond:'Iónico-Covalente' },
+  'SiO2':  { formula:'SiO2',   name:'Dióxido de Silicio',     bond:'Covalente'},
+  'CO2':   { formula:'CO2',    name:'Dióxido de Carbono',     bond:'Covalente'},
+  'CO':    { formula:'CO',     name:'Monóxido de Carbono',    bond:'Covalente'},
+  'H2O':   { formula:'H2O',    name:'Agua',                   bond:'Covalente Polar'},
+  'HCl':   { formula:'HCl',    name:'Ácido Clorhídrico',      bond:'Covalente Polar'},
+  'HF':    { formula:'HF',     name:'Ácido Fluorhídrico',     bond:'Covalente Polar'},
+  'HBr':   { formula:'HBr',    name:'Ácido Bromhídrico',      bond:'Covalente Polar'},
+  'HI':    { formula:'HI',     name:'Ácido Yodhídrico',       bond:'Covalente Polar'},
+  'H2S':   { formula:'H2S',    name:'Ácido Sulfhídrico',      bond:'Covalente Polar'},
+  'NH3':   { formula:'NH3',    name:'Amoníaco',               bond:'Covalente'},
+  'NO':    { formula:'NO',     name:'Monóxido de Nitrógeno',  bond:'Covalente'},
+  'NO2':   { formula:'NO2',    name:'Dióxido de Nitrógeno',   bond:'Covalente'},
+  'N2O':   { formula:'N2O',    name:'Óxido Nitroso',          bond:'Covalente'},
+  'SO2':   { formula:'SO2',    name:'Dióxido de Azufre',      bond:'Covalente'},
+  'SO3':   { formula:'SO3',    name:'Trióxido de Azufre',     bond:'Covalente'},
+  'Na2S':  { formula:'Na2S',   name:'Sulfuro de Sodio',       bond:'Iónico'   },
+  'CaS':   { formula:'CaS',    name:'Sulfuro de Calcio',      bond:'Iónico'   },
+  'FeS':   { formula:'FeS',    name:'Sulfuro Ferroso',        bond:'Iónico'   },
+  'Fe2S3': { formula:'Fe2S3',  name:'Sulfuro Férrico',        bond:'Iónico'   },
+  'Cu2S':  { formula:'Cu2S',   name:'Sulfuro Cuproso',        bond:'Iónico'   },
+  'CuS':   { formula:'CuS',    name:'Sulfuro Cúprico',        bond:'Iónico'   },
+  'PbS':   { formula:'PbS',    name:'Sulfuro de Plomo(II)',   bond:'Iónico'   },
+  'ZnS':   { formula:'ZnS',    name:'Sulfuro de Zinc',        bond:'Iónico'   },
+  'AgI':   { formula:'AgI',    name:'Yoduro de Plata',        bond:'Covalente-Iónico'},
+  'AlN':   { formula:'AlN',    name:'Nitruro de Aluminio',    bond:'Covalente'},
+  'Ca3N2': { formula:'Ca3N2',  name:'Nitruro de Calcio',      bond:'Iónico'   },
+  'Li3N':  { formula:'Li3N',   name:'Nitruro de Litio',       bond:'Iónico'   },
+  'Mg3N2': { formula:'Mg3N2',  name:'Nitruro de Magnesio',    bond:'Iónico'   },
+  'Ca3P2': { formula:'Ca3P2',  name:'Fosfuro de Calcio',      bond:'Iónico'   },
+  'Na3P':  { formula:'Na3P',   name:'Fosfuro de Sodio',       bond:'Iónico'   },
+  'AlP':   { formula:'AlP',    name:'Fosfuro de Aluminio',    bond:'Covalente'},
+  'SiC':   { formula:'SiC',    name:'Carburo de Silicio',     bond:'Covalente'},
+  'CaC2':  { formula:'CaC2',   name:'Carburo de Calcio',      bond:'Iónico-Covalente'},
+  'Al4C3': { formula:'Al4C3',  name:'Carburo de Aluminio',    bond:'Iónico'   },
+  'NiO':   { formula:'NiO',    name:'Óxido de Níquel(II)',    bond:'Iónico'   },
+  'Ni2O3': { formula:'Ni2O3',  name:'Óxido de Níquel(III)',   bond:'Iónico'   },
+  'MnO2':  { formula:'MnO2',   name:'Dióxido de Manganeso',   bond:'Iónico-Covalente'},
+  'Cr2O3': { formula:'Cr2O3',  name:'Óxido de Cromo(III)',    bond:'Iónico'   },
+  'HgO':   { formula:'HgO',    name:'Óxido de Mercurio(II)',  bond:'Covalente-Iónico'},
+  'Hg2Cl2':{ formula:'Hg2Cl2', name:'Cloruro Mercurioso',     bond:'Iónico'   },
+  'HgCl2': { formula:'HgCl2',  name:'Cloruro Mercúrico',      bond:'Covalente'},
+  'AuCl':  { formula:'AuCl',   name:'Cloruro Auroso',         bond:'Covalente-Iónico'},
+  'AuCl3': { formula:'AuCl3',  name:'Cloruro Áurico',         bond:'Covalente'},
+  'SnO':   { formula:'SnO',    name:'Óxido de Estaño(II)',    bond:'Iónico'   },
+  'SnO2':  { formula:'SnO2',   name:'Óxido de Estaño(IV)',    bond:'Iónico-Covalente'},
+  'PbO':   { formula:'PbO',    name:'Óxido de Plomo(II)',     bond:'Iónico'   },
+  'PbO2':  { formula:'PbO2',   name:'Óxido de Plomo(IV)',     bond:'Iónico-Covalente'},
+  'CoO':   { formula:'CoO',    name:'Óxido de Cobalto(II)',   bond:'Iónico'   },
+  'Co2O3': { formula:'Co2O3',  name:'Óxido de Cobalto(III)',  bond:'Iónico'   },
+};
+
+// ── Populate selects ──────────────────────────────
+function populateValSelects() {
+  const metals    = VALENCIA_ATOMS.filter(a => a.cat === 'metal');
+  const nonmetals = VALENCIA_ATOMS.filter(a => a.cat !== 'metal');
+  const selA = document.getElementById('val-atom-a');
+  const selB = document.getElementById('val-atom-b');
+
+  // Atom A: all atoms (positive-valencia metals mainly, but allow all)
+  VALENCIA_ATOMS.forEach(a => {
+    const posVals = a.valences.filter(v => v > 0);
+    if (posVals.length === 0) return;
+    const o = document.createElement('option');
+    o.value = a.sym;
+    o.textContent = `${a.sym} — ${a.name}  (val: ${posVals.map(v=>'+'+v).join(', ')})`;
+    selA.appendChild(o);
+  });
+
+  // Atom B: nonmetals (negative valences)
+  VALENCIA_ATOMS.forEach(a => {
+    const negVals = a.valences.filter(v => v < 0);
+    if (negVals.length === 0) return;
+    const o = document.createElement('option');
+    o.value = a.sym;
+    o.textContent = `${a.sym} — ${a.name}  (val: ${negVals.map(v=>v).join(', ')})`;
+    selB.appendChild(o);
+  });
+}
+
+// ── On atom selection change ──────────────────────
+function onValAtomChange(slot) {
+  const symA = document.getElementById('val-atom-a').value;
+  const symB = document.getElementById('val-atom-b').value;
+  renderBadges('a', symA);
+  renderBadges('b', symB);
+  if (symA && symB) {
+    buildCombinations(symA, symB);
+  } else {
+    document.getElementById('val-combos-box').style.display = 'none';
+    document.getElementById('val-diagram-box').style.display = 'none';
+    document.getElementById('val-results').style.display = 'none';
+  }
+}
+
+function renderBadges(slot, sym) {
+  const box = document.getElementById('val-badges-' + slot);
+  if (!sym) { box.innerHTML = ''; return; }
+  const atom = VALENCIA_ATOMS.find(a => a.sym === sym);
+  if (!atom) return;
+  box.innerHTML = atom.valences.map(v => {
+    const cls = v > 0 ? 'val-badge-pos' : v < 0 ? 'val-badge-neg' : 'val-badge-neu';
+    const sign = v > 0 ? '+' : '';
+    return `<span class="val-badge ${cls}">${sign}${v}</span>`;
+  }).join('') + `<span class="val-badge val-badge-neu">${atom.cat}</span>`;
+}
+
+// ── Build possible compound combinations ──────────
+function gcd(a, b) { a = Math.abs(a); b = Math.abs(b); while (b) { [a,b] = [b, a%b]; } return a; }
+
+function buildFormula(symA, vA, symB, vB) {
+  // Cross-valence rule: subscript of A = |vB|/gcd, subscript of B = |vA|/gcd
+  const absA = Math.abs(vA), absB = Math.abs(vB);
+  const g = gcd(absA, absB);
+  const subA = absB / g;
+  const subB = absA / g;
+  const fA = symA + (subA > 1 ? subA : '');
+  const fB = symB + (subB > 1 ? subB : '');
+  return fA + fB;
+}
+
+function buildCombinations(symA, symB) {
+  const atomA = VALENCIA_ATOMS.find(a => a.sym === symA);
+  const atomB = VALENCIA_ATOMS.find(a => a.sym === symB);
+  if (!atomA || !atomB) return;
+
+  const posValsA = atomA.valences.filter(v => v > 0);
+  const negValsB = atomB.valences.filter(v => v < 0);
+
+  const seen = new Set();
+  const combos = [];
+
+  for (const vA of posValsA) {
+    for (const vB of negValsB) {
+      const formula = buildFormula(symA, vA, symB, vB);
+      if (seen.has(formula)) continue;
+      seen.add(formula);
+      const known = KNOWN_COMPOUNDS[formula];
+      combos.push({
+        formula,
+        name: known ? known.name : formula,
+        bond: known ? known.bond : 'Por determinar',
+        vA, vB,
+      });
+    }
+  }
+
+  const listEl = document.getElementById('val-combos-list');
+  listEl.innerHTML = combos.map((c, i) => `
+    <div class="val-compound-row" onclick="selectCompound(${JSON.stringify(c).replace(/"/g,'&quot;')}, '${symA}', '${symB}')">
+      <div class="val-compound-formula">${c.formula}</div>
+      <div class="val-compound-name">${c.name}</div>
+      <div class="val-compound-type">${c.bond}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('val-combos-box').style.display = 'block';
+  document.getElementById('val-diagram-box').style.display = 'none';
+  document.getElementById('val-results').style.display = 'none';
+}
+
+// ── Select a compound to analyze ─────────────────
+let currentCompound = null;
+
+function selectCompound(comp, symA, symB) {
+  currentCompound = { ...comp, symA, symB };
+  const atomA = VALENCIA_ATOMS.find(a => a.sym === symA);
+  const atomB = VALENCIA_ATOMS.find(a => a.sym === symB);
+
+  // Formula hero
+  const hero = document.getElementById('val-formula-hero');
+  hero.innerHTML = `
+    <div class="val-formula-text">${comp.formula}</div>
+    <div class="val-formula-name">${comp.name}</div>
+  `;
+
+  // Diagram
+  const diag = document.getElementById('val-diagram');
+  const bondLabel = comp.bond.toLowerCase().includes('iónico') ? 'enlace iónico' :
+                    comp.bond.toLowerCase().includes('covalente') ? 'enlace covalente' : comp.bond.toLowerCase();
+  diag.innerHTML = `
+    <div class="val-atom-node">
+      <div class="val-atom-circle atom-pos">${symA}<div class="val-atom-valence">+${comp.vA}</div></div>
+      <div class="val-atom-label">${atomA.name}<br>${atomA.cat}</div>
+    </div>
+    <div class="val-bond-line">
+      <div class="val-bond-dash"></div>
+      <div class="val-bond-label">${bondLabel}</div>
+      <div class="val-bond-dash"></div>
+    </div>
+    <div class="val-atom-node">
+      <div class="val-atom-circle atom-neg">${symB}<div class="val-atom-valence">${comp.vB}</div></div>
+      <div class="val-atom-label">${atomB.name}<br>${atomB.cat}</div>
+    </div>
+  `;
+
+  // Info strip
+  const strip = document.getElementById('val-info-strip');
+  strip.innerHTML = `
+    <div class="val-info-chip">⚡ Valencia <strong>${symA}</strong>: +${comp.vA}</div>
+    <div class="val-info-chip">⚡ Valencia <strong>${symB}</strong>: ${comp.vB}</div>
+    <div class="val-info-chip">🔗 Tipo: <strong>${comp.bond}</strong></div>
+    <div class="val-info-chip">📐 Regla cruzada aplicada</div>
+  `;
+
+  document.getElementById('val-diagram-box').style.display = 'block';
+  document.getElementById('val-results').style.display = 'none';
+  document.getElementById('val-msg').innerHTML = '';
+
+  // Scroll to diagram
+  document.getElementById('val-diagram-box').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── Clear ─────────────────────────────────────────
+function clearValencia() {
+  document.getElementById('val-atom-a').value = '';
+  document.getElementById('val-atom-b').value = '';
+  document.getElementById('val-badges-a').innerHTML = '';
+  document.getElementById('val-badges-b').innerHTML = '';
+  document.getElementById('val-combos-box').style.display = 'none';
+  document.getElementById('val-diagram-box').style.display = 'none';
+  document.getElementById('val-results').style.display = 'none';
+  document.getElementById('val-msg').innerHTML = '';
+  currentCompound = null;
+}
+
+// ── AI Analysis ───────────────────────────────────
+async function runValenciaAI() {
+  if (!currentCompound) return;
+  const msgEl = document.getElementById('val-msg');
+  const resEl = document.getElementById('val-results');
+
+  msgEl.innerHTML = `
+    <div class="val-loading">
+      <div class="val-spinner"></div>
+      <span>Consultando IA — analizando <strong>${currentCompound.formula}</strong> <span class="val-dot"></span></span>
+    </div>`;
+  resEl.style.display = 'none';
+
+  const { formula, name, bond, symA, symB, vA, vB } = currentCompound;
+  const atomA = VALENCIA_ATOMS.find(a => a.sym === symA);
+  const atomB = VALENCIA_ATOMS.find(a => a.sym === symB);
+
+  const prompt = [
+    'Eres un experto en quimica inorganica.',
+    'Analiza el compuesto ' + formula + ' (' + name + ').',
+    'Se forma uniendo ' + atomA.name + ' (' + symA + ') con valencia +' + vA,
+    'y ' + atomB.name + ' (' + symB + ') con valencia ' + vB + ', mediante enlace ' + bond + '.',
+    '',
+    'Responde UNICAMENTE con JSON valido, sin markdown, sin texto adicional antes ni despues.',
+    'Usa exactamente estas claves (todas en español, valores cortos y precisos):',
+    '',
+    'formula / name / iupac_name / bond_type / bond_explanation / valence_rule',
+    'physical_properties: { state, color, odor, melting_point, boiling_point, density, solubility }',
+    'chemical_properties: [ 4 strings ]',
+    'technology_uses: [ 4 objetos {area, use} ]',
+    'tech_development_role (1 parrafo)',
+    'world_production: { annual_tons, trend }',
+    'producing_countries: [ 5 objetos {country, flag, share} ]',
+    'market_price: { price_usd, price_context, market_size_usd }',
+    'fun_fact',
+    '',
+    'IMPORTANTE: Los valores string NO deben contener comillas dobles internas.',
+    'Escribe numeros sin simbolos de moneda dentro de strings para evitar errores JSON.',
+  ].join('\n');
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 2048,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    if (!response.ok) throw new Error('API error ' + response.status);
+    const data = await response.json();
+    const rawText = data.content.map(b => b.text || '').join('');
+
+    const json = parseAIJson(rawText);
+    msgEl.innerHTML = '';
+    renderValenciaResults(json, resEl);
+
+  } catch (err) {
+    msgEl.innerHTML = `<div class="msg msg-error">⚠ Error al consultar la IA: ${err.message}. Intenta de nuevo.</div>`;
+  }
+}
+
+// ── Robust JSON parser with auto-repair ──────────
+function parseAIJson(raw) {
+  // Strip markdown fences
+  let text = raw.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim();
+
+  // Direct parse attempt
+  try { return JSON.parse(text); } catch (_) {}
+
+  // Extract outermost { ... }
+  const start = text.indexOf('{');
+  const end   = text.lastIndexOf('}');
+  if (start !== -1 && end !== -1 && end > start) {
+    text = text.slice(start, end + 1);
+    try { return JSON.parse(text); } catch (_) {}
+  }
+
+  // Auto-repair: truncated JSON — close open structures
+  text = repairJson(text);
+  try { return JSON.parse(text); } catch (e) {
+    throw new Error('No se pudo interpretar la respuesta de la IA. Por favor intenta de nuevo.');
+  }
+}
+
+function repairJson(str) {
+  // Remove trailing commas before } or ]
+  str = str.replace(/,\s*([}\]])/g, '$1');
+
+  // Count open brackets/braces to close them
+  const stack = [];
+  let inStr = false, escape = false;
+  for (const ch of str) {
+    if (escape) { escape = false; continue; }
+    if (ch === '\\') { escape = true; continue; }
+    if (ch === '"') { inStr = !inStr; continue; }
+    if (inStr) continue;
+    if (ch === '{') stack.push('}');
+    else if (ch === '[') stack.push(']');
+    else if (ch === '}' || ch === ']') stack.pop();
+  }
+  // Close any unclosed strings first
+  if (inStr) str += '"';
+  // Close open brackets in reverse order
+  while (stack.length) str += stack.pop();
+  // One more trailing-comma pass after closing
+  str = str.replace(/,\s*([}\]])/g, '$1');
+  return str;
+}
+
+// ── Render AI results ─────────────────────────────
+function renderValenciaResults(d, container) {
+  const techRows = (d.technology_uses || []).map(t => `
+    <div class="val-prop-item">
+      <div class="val-prop-key">${t.area}</div>
+      <div class="val-prop-val" style="font-weight:400;font-size:0.72rem;color:#555;">${t.use}</div>
+    </div>`).join('');
+
+  const chemProps = (d.chemical_properties || []).map(p =>
+    `<div style="padding:6px 0;border-bottom:1px solid var(--line);font-size:0.74rem;color:#444;line-height:1.6;">▸ ${p}</div>`
+  ).join('');
+
+  const countryCols = (d.producing_countries || []).map(c => `
+    <div class="val-country-tag">
+      <span class="val-country-flag">${c.flag}</span>
+      <strong>${c.country}</strong><br>
+      <span style="font-size:0.62rem;color:#888;">${c.share}</span>
+    </div>`).join('');
+
+  container.innerHTML = `
+    <!-- Header -->
+    <div style="border:2px solid var(--ink);background:var(--ink);padding:16px 20px;margin-bottom:12px;box-shadow:4px 4px 0 var(--amber-dark);">
+      <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--amber-light);margin-bottom:8px;">Análisis Completo — IA</div>
+      <div style="font-family:var(--serif);font-style:italic;font-size:1.8rem;color:var(--amber-light);letter-spacing:-0.01em;">${d.formula}</div>
+      <div style="font-family:var(--mono);font-size:0.72rem;color:#888;margin-top:4px;">${d.name} · ${d.iupac_name || ''}</div>
+    </div>
+
+    <!-- Bond & Valencia -->
+    ${valSection('🔗', 'Enlace Químico y Valencia', `
+      <div class="val-prop-grid">
+        <div class="val-prop-item"><div class="val-prop-key">Tipo de enlace</div><div class="val-prop-val">${d.bond_type}</div></div>
+        <div class="val-prop-item"><div class="val-prop-key">Regla de la Cruz</div><div class="val-prop-val" style="font-size:0.68rem;font-weight:400;">${d.valence_rule || '—'}</div></div>
+      </div>
+      <div style="margin-top:12px;font-size:0.75rem;color:#555;line-height:1.8;border-left:3px solid var(--amber);padding-left:12px;">${d.bond_explanation}</div>
+    `)}
+
+    <!-- Physical properties -->
+    ${valSection('⚗️', 'Propiedades Físicas', `
+      <div class="val-prop-grid">
+        <div class="val-prop-item"><div class="val-prop-key">Estado (25°C)</div><div class="val-prop-val">${d.physical_properties?.state || '—'}</div></div>
+        <div class="val-prop-item"><div class="val-prop-key">Color</div><div class="val-prop-val">${d.physical_properties?.color || '—'}</div></div>
+        <div class="val-prop-item"><div class="val-prop-key">Punto de fusión</div><div class="val-prop-val">${d.physical_properties?.melting_point || '—'}</div></div>
+        <div class="val-prop-item"><div class="val-prop-key">Punto de ebullición</div><div class="val-prop-val">${d.physical_properties?.boiling_point || '—'}</div></div>
+        <div class="val-prop-item"><div class="val-prop-key">Densidad</div><div class="val-prop-val">${d.physical_properties?.density || '—'}</div></div>
+        <div class="val-prop-item"><div class="val-prop-key">Solubilidad</div><div class="val-prop-val">${d.physical_properties?.solubility || '—'}</div></div>
+        ${d.physical_properties?.odor ? `<div class="val-prop-item val-prop-item--full" style="grid-column:1/-1;"><div class="val-prop-key">Olor</div><div class="val-prop-val">${d.physical_properties.odor}</div></div>` : ''}
+      </div>
+    `)}
+
+    <!-- Chemical properties -->
+    ${valSection('🧪', 'Propiedades Químicas', `<div style="margin-top:4px;">${chemProps}</div>`)}
+
+    <!-- Tech uses -->
+    ${valSection('💡', 'Usos en Tecnología', `<div class="val-prop-grid">${techRows}</div>`)}
+
+    <!-- Tech development -->
+    ${valSection('🚀', 'Rol en el Desarrollo Tecnológico', `
+      <div style="font-size:0.77rem;color:#444;line-height:1.9;border-left:3px solid var(--teal);padding-left:14px;">
+        ${d.tech_development_role || '—'}
+      </div>
+    `)}
+
+    <!-- World production -->
+    ${valSection('🌍', 'Producción Mundial', `
+      <div class="val-prop-grid" style="margin-bottom:14px;">
+        <div class="val-prop-item"><div class="val-prop-key">Producción anual</div><div class="val-prop-val">${d.world_production?.annual_tons || '—'}</div></div>
+        <div class="val-prop-item"><div class="val-prop-key">Tendencia</div><div class="val-prop-val">${d.world_production?.trend || '—'}</div></div>
+      </div>
+      <div class="val-market-grid">${countryCols}</div>
+    `)}
+
+    <!-- Market -->
+    ${valSection('💰', 'Valor en el Mercado', `
+      <div class="val-prop-grid">
+        <div class="val-prop-item"><div class="val-prop-key">Precio unitario</div><div class="val-prop-val">${d.market_price?.price_usd || '—'}</div></div>
+        <div class="val-prop-item"><div class="val-prop-key">Tamaño del mercado</div><div class="val-prop-val">${d.market_price?.market_size_usd || '—'}</div></div>
+        <div class="val-prop-item" style="grid-column:1/-1;"><div class="val-prop-key">Contexto</div><div class="val-prop-val" style="font-weight:400;font-size:0.72rem;">${d.market_price?.price_context || '—'}</div></div>
+      </div>
+    `)}
+
+    <!-- Fun fact -->
+    ${d.fun_fact ? `
+    <div style="border:2px solid var(--amber);background:var(--paper2);padding:14px 18px;margin-top:4px;box-shadow:3px 3px 0 var(--amber-dark);">
+      <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--amber-dark);margin-bottom:6px;">💡 Dato Curioso</div>
+      <div style="font-family:var(--mono);font-size:0.74rem;color:var(--ink);line-height:1.7;">${d.fun_fact}</div>
+    </div>` : ''}
+  `;
+
+  container.style.display = 'block';
+  container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // Toggle sections
+  container.querySelectorAll('.val-section-head').forEach(h => {
+    h.addEventListener('click', () => h.closest('.val-section').classList.toggle('collapsed'));
+  });
+}
+
+function valSection(icon, label, body) {
+  return `
+    <div class="val-section">
+      <div class="val-section-head">
+        <span class="val-section-icon">${icon}</span>
+        <span class="val-section-label">${label}</span>
+        <span class="val-section-chev">▾</span>
+      </div>
+      <div class="val-section-body">${body}</div>
+    </div>`;
+}
+
+// ── Init ──────────────────────────────────────────
+populateValSelects();
+
+
+const EL_LIST = Object.entries(ELEMENTS).map(([sym,d])=>({sym,...d}));
+
+function filterElements(query, dropdownId) {
+  const dd = document.getElementById(dropdownId);
+  if (!query || query.length < 1) { dd.classList.remove('open'); return; }
+  const q = query.toLowerCase();
+  const matches = EL_LIST.filter(e =>
+    e.sym.toLowerCase().startsWith(q) ||
+    e.name.toLowerCase().startsWith(q) ||
+    e.name.toLowerCase().includes(q)
+  ).slice(0, 8);
+  if (!matches.length) { dd.classList.remove('open'); return; }
+  dd.innerHTML = matches.map(e =>
+    `<div class="el-option" onmousedown="selectElement('${e.sym}','${dropdownId}')">
+      <span class="sym">${e.sym}</span>
+      <span class="name">${e.name}</span>
+      <span class="en-num">${e.en !== null ? e.en : '—'}</span>
+    </div>`
+  ).join('');
+  dd.classList.add('open');
+}
+
+function closeDropdown(id) { document.getElementById(id).classList.remove('open'); }
+
+function selectElement(sym, dropdownId) {
+  const dd = document.getElementById(dropdownId);
+  dd.classList.remove('open');
+  if (dropdownId === 'en-dropdown-single') {
+    document.getElementById('en-single-input').value = sym;
+  } else if (dropdownId === 'en-dropdown-1') {
+    document.getElementById('en-el1-input').value = sym;
+  } else {
+    document.getElementById('en-el2-input').value = sym;
+  }
+}
+
+function resolveElement(inputId) {
+  const val = document.getElementById(inputId).value.trim();
+  if (!val) return null;
+  const bySym = EL_LIST.find(e => e.sym.toLowerCase() === val.toLowerCase());
+  if (bySym) return bySym.sym;
+  const byName = EL_LIST.find(e => e.name.toLowerCase() === val.toLowerCase());
+  if (byName) return byName.sym;
+  const partial = EL_LIST.find(e => e.name.toLowerCase().startsWith(val.toLowerCase()) || e.sym.toLowerCase().startsWith(val.toLowerCase()));
+  if (partial) return partial.sym;
+  return null;
+}
+
+function enBarWidth(val) { if (val === null || val === undefined || isNaN(val)) return '0%'; return ((val / EN_MAX) * 100).toFixed(1) + '%'; }
+
+function calcSingle() {
+  const sym = resolveElement('en-single-input');
+  const box = document.getElementById('en-single-result');
+  if (!sym) { box.innerHTML = `<div class="msg msg-error">⚠ Elemento no encontrado. Prueba con el símbolo (Fe, Cl) o nombre completo.</div>`; return; }
+  const el = ELEMENTS[sym];
+  if (el.en === null || el.en === undefined) { box.innerHTML = `<div class="msg msg-error">⚠ No hay valor de electronegatividad disponible para ${el.name} (${sym}).</div>`; return; }
+  const pct = enBarWidth(el.en);
+
+  let category, catNote;
+  if (el.en < 1.5) { category='Muy electrodonador'; catNote='Comportamiento típicamente metálico. Tiende a perder electrones.'; }
+  else if (el.en < 2.0) { category='Electrodonador moderado'; catNote='Mayor tendencia a ceder que a atraer electrones.'; }
+  else if (el.en < 2.5) { category='Electronegatividad media'; catNote='Compartición de electrones equilibrada en enlaces.'; }
+  else if (el.en < 3.0) { category='Electronegativo'; catNote='Tiende a atraer los electrones del enlace hacia sí.'; }
+  else { category='Muy electronegativo'; catNote='Atrae fuertemente los electrones del enlace.'; }
+
+  box.innerHTML = `
+    <div class="en-grid">
+      <div class="en-element-card">
+        <div class="en-sym">${sym}</div>
+        <div class="en-name">${el.name}</div>
+        <div class="en-value">${el.en}</div>
+        <div class="en-value-label">Escala de Pauling</div>
+        <div class="en-bar-wrap"><div class="en-bar" style="width:0" data-w="${pct}"></div></div>
+      </div>
+      <div class="en-analysis-card" style="grid-column:unset;">
+        <div class="analysis-row"><span class="analysis-key">Período</span><span class="analysis-val">${el.period}</span></div>
+        <div class="analysis-row"><span class="analysis-key">Grupo</span><span class="analysis-val">${el.group}</span></div>
+        <div class="analysis-row"><span class="analysis-key">Categoría</span><span class="analysis-val" style="font-weight:700;">${category}</span></div>
+        <div class="analysis-row"><span class="analysis-key">Nota</span><span class="analysis-val" style="color:#777;">${catNote}</span></div>
+        <div style="margin-top:12px;font-size:0.68rem;color:#aaa;border-top:1px solid #ddd;padding-top:10px;line-height:1.7;">
+          La electronegatividad <strong>aumenta</strong> de izquierda a derecha en el mismo período y <strong>disminuye</strong> de arriba hacia abajo en el mismo grupo.
+        </div>
+      </div>
+    </div>`;
+  // animate bar
+  requestAnimationFrame(()=>{ const bar=box.querySelector('.en-bar'); if(bar) setTimeout(()=>{ bar.style.width=bar.dataset.w; },50); });
+}
+
+function calcPair() {
+  const sym1 = resolveElement('en-el1-input');
+  const sym2 = resolveElement('en-el2-input');
+  const box  = document.getElementById('en-pair-result');
+  if (!sym1 || !sym2) { box.innerHTML = `<div class="msg msg-error">⚠ Ingresa dos elementos válidos.</div>`; return; }
+  const el1 = ELEMENTS[sym1], el2 = ELEMENTS[sym2];
+  if (el1.en === null || el1.en === undefined || el2.en === null || el2.en === undefined) {
+    const miss = [];
+    if (el1.en === null || el1.en === undefined) miss.push(`${el1.name} (${sym1})`);
+    if (el2.en === null || el2.en === undefined) miss.push(`${el2.name} (${sym2})`);
+    box.innerHTML = `<div class="msg msg-error">⚠ Falta valor de electronegatividad para: ${miss.join(', ')}.</div>`; return;
+  }
+  const delta = Math.abs(el1.en - el2.en);
+  const more  = el1.en > el2.en ? sym1 : sym2;
+  const less  = el1.en > el2.en ? sym2 : sym1;
+  const moreEl= ELEMENTS[more], lessEl=ELEMENTS[less];
+
+  let bondType, bondDesc, bondPct;
+  if (delta < 0.5) {
+    bondType='Enlace Covalente Apolar';
+    bondDesc=`Los electrones se comparten casi igualmente entre ${sym1} y ${sym2}. Sin dipolo significativo (Δ = ${delta.toFixed(2)}).`;
+    bondPct=(delta/4.0)*100;
+  } else if (delta < 1.7) {
+    bondType='Enlace Covalente Polar';
+    bondDesc=`Los electrones se desplazan hacia ${more} (EN = ${moreEl.en}). Hay dipolo: δ⁻ en ${more}, δ⁺ en ${less} (Δ = ${delta.toFixed(2)}).`;
+    bondPct=(delta/4.0)*100;
+  } else {
+    bondType='Enlace Iónico';
+    bondDesc=`Diferencia muy alta. ${more} atrae los electrones con tanta fuerza que se forman iones: ${more}⁻ y ${less}⁺ (Δ = ${delta.toFixed(2)}).`;
+    bondPct=Math.min((delta/4.0)*100, 100);
+  }
+
+  box.innerHTML = `
+    <div class="en-grid" style="margin-top:16px;">
+      <div class="en-element-card">
+        <div class="en-sym">${sym1}</div>
+        <div class="en-name">${el1.name}</div>
+        <div class="en-value">${el1.en}</div>
+        <div class="en-bar-wrap"><div class="en-bar" style="width:0" data-w="${enBarWidth(el1.en)}"></div></div>
+      </div>
+      <div class="en-element-card">
+        <div class="en-sym">${sym2}</div>
+        <div class="en-name">${el2.name}</div>
+        <div class="en-value">${el2.en}</div>
+        <div class="en-bar-wrap"><div class="en-bar" style="width:0" data-w="${enBarWidth(el2.en)}"></div></div>
+      </div>
+    </div>
+    <div class="bond-display" style="margin-top:14px;">
+      <div class="bond-type-label">Tipo de enlace determinado</div>
+      <div class="bond-type-name">${bondType}</div>
+      <div class="bond-delta">Δ electronegatividad = ${delta.toFixed(2)} · Mayor EN: ${more} (${moreEl.en}) · Menor EN: ${less} (${lessEl.en})</div>
+      <div class="bond-bar-wrap"><div class="bond-bar" style="width:0" data-w="${bondPct.toFixed(1)}%"></div></div>
+      <div class="bond-markers">
+        <span>0.0 — Cov. apolar</span><span>0.5</span><span>1.7 — Iónico</span><span>4.0</span>
+      </div>
+      <div class="bond-desc">${bondDesc}</div>
+    </div>`;
+  // animate bars
+  requestAnimationFrame(()=>{
+    setTimeout(()=>{
+      box.querySelectorAll('[data-w]').forEach(b => { b.style.width = b.dataset.w; });
+    }, 50);
+  });
+}
+// Helper: call the serverless AI proxy (deployed on Vercel/Netlify)
+// Usage: await callAI({ prompt: 'hola', parameters: { max_new_tokens: 128 } })
+async function callAI(payload) {
+  try {
+    const res = await fetch('/api/ai', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) {
+      const txt = await res.text();
+      throw new Error(`AI proxy error: ${res.status} ${txt}`);
+    }
+    return await res.json();
+  } catch (err) {
+    console.error('callAI error', err);
+    if (typeof showRedoxMsg === 'function') showRedoxMsg('Error al consultar la IA: '+err.message, 'error');
+    else alert('Error al consultar la IA: '+err.message);
+    throw err;
+  }
+}
+
+</script>
+</body>
+</html>
