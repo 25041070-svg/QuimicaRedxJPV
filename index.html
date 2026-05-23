@@ -2999,26 +2999,31 @@ async function runValenciaAI() {
   const atomB = VALENCIA_ATOMS.find(a => a.sym === symB);
 
   const prompt = [
-    'Eres un experto en quimica inorganica.',
+    'Eres un experto en química inorgánica y mercados químicos industriales.',
     'Analiza el compuesto ' + formula + ' (' + name + ').',
     'Se forma uniendo ' + atomA.name + ' (' + symA + ') con valencia +' + vA,
     'y ' + atomB.name + ' (' + symB + ') con valencia ' + vB + ', mediante enlace ' + bond + '.',
     '',
-    'Responde UNICAMENTE con JSON valido, sin markdown, sin texto adicional antes ni despues.',
-    'Usa exactamente estas claves (todas en español, valores cortos y precisos):',
+    'Responde UNICAMENTE con JSON válido, sin markdown, sin texto adicional antes ni después.',
+    'Usa exactamente estas claves (todas en español, valores cortos y REALISTAS):',
     '',
     'formula / name / iupac_name / bond_type / bond_explanation / valence_rule',
     'physical_properties: { state, color, odor, melting_point, boiling_point, density, solubility }',
-    'chemical_properties: [ 4 strings ]',
-    'technology_uses: [ 4 objetos {area, use} ]',
-    'tech_development_role (1 parrafo)',
-    'world_production: { annual_tons, trend }',
-    'producing_countries: [ 5 objetos {country, flag, share} ]',
-    'market_price: { price_usd, price_context, market_size_usd }',
-    'fun_fact',
+    'chemical_properties: [ 4 strings con propiedades químicas reales ]',
+    'technology_uses: [ 4-5 objetos {area, use} con usos industriales reales ]',
+    'tech_development_role (1-2 párrafos sobre su importancia en tecnología)',
+    'world_production: { annual_tons: "valor con unidad (ej: 5 millones de toneladas)", trend: "creciente/estable/decreciente" }',
+    'producing_countries: [ 5 objetos {country, flag, share: "porcentaje de producción (ej: 25%)"} ]',
+    'market_price: { price_usd: "precio por unidad con contexto (ej: USD 2-5 por kg)", price_context: "para qué tipo de uso", market_size_usd: "tamaño del mercado anual (ej: USD 50 millones)" }',
+    'fun_fact (dato curioso o histórico real)',
     '',
-    'IMPORTANTE: Los valores string NO deben contener comillas dobles internas.',
-    'Escribe numeros sin simbolos de moneda dentro de strings para evitar errores JSON.',
+    'REGLAS CRÍTICAS:',
+    '- Genera valores REALISTAS basados en datos conocidos de ' + formula,
+    '- price_usd debe incluir rango de precio Y unidad (por kg, por tonelada, etc)',
+    '- market_size_usd debe ser un valor anual aproximado en USD o millones de USD',
+    '- annual_tons debe ser realista (no números mágicos como 1000000 sin unidad)',
+    '- NO uses comillas dobles dentro de strings',
+    '- Todos los números deben tener contexto y unidad',
   ].join('\n');
 
   try {
@@ -3163,9 +3168,9 @@ function renderValenciaResults(d, container) {
     <!-- Market -->
     ${valSection('💰', 'Valor en el Mercado', `
       <div class="val-prop-grid">
-        <div class="val-prop-item"><div class="val-prop-key">Precio unitario</div><div class="val-prop-val">${d.market_price?.price_usd || '—'}</div></div>
-        <div class="val-prop-item"><div class="val-prop-key">Tamaño del mercado</div><div class="val-prop-val">${d.market_price?.market_size_usd || '—'}</div></div>
-        <div class="val-prop-item" style="grid-column:1/-1;"><div class="val-prop-key">Contexto</div><div class="val-prop-val" style="font-weight:400;font-size:0.72rem;">${d.market_price?.price_context || '—'}</div></div>
+        <div class="val-prop-item" style="grid-column:1/-1;"><div class="val-prop-key">Precio por unidad</div><div class="val-prop-val" style="font-weight:400;font-size:0.75rem;">${d.market_price?.price_usd || '—'}</div></div>
+        <div class="val-prop-item" style="grid-column:1/-1;"><div class="val-prop-key">Contexto de uso</div><div class="val-prop-val" style="font-weight:400;font-size:0.73rem;color:#666;">${d.market_price?.price_context || '—'}</div></div>
+        <div class="val-prop-item" style="grid-column:1/-1;"><div class="val-prop-key">Mercado anual (mundial)</div><div class="val-prop-val" style="font-weight:600;font-size:0.78rem;color:var(--amber);">${d.market_price?.market_size_usd || '—'}</div></div>
       </div>
     `)}
 
