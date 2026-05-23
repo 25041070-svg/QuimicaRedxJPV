@@ -1,0 +1,11 @@
+{
+  "name": "quimica-redx-jpv",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  }
+}
