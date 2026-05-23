@@ -17,13 +17,19 @@ module.exports = async (req, res) => {
     return;
   }
 
+  const HF_KEY = process.env.HF_API_KEY;
   const HF_MODEL = process.env.HF_MODEL || 'gpt2';
   const HF_URL = `https://api-inference.huggingface.co/models/${HF_MODEL}`;
+
+  if (!HF_KEY) {
+    console.error('Missing HF_API_KEY in environment');
+    res.status(500).json({ error: 'Missing Hugging Face API key', details: 'Set HF_API_KEY in Vercel environment variables.' });
+    return;
+  }
 
   let body;
   try {
     const incoming = req.body || {};
-    // Accept either { prompt: '...' } or full inference payloads
     if (incoming.prompt) {
       body = { inputs: incoming.prompt, parameters: incoming.parameters || {} };
     } else if (incoming.inputs) {
@@ -39,22 +45,27 @@ module.exports = async (req, res) => {
     const r = await fetch(HF_URL, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.HF_API_KEY}`,
+        Authorization: `Bearer ${HF_KEY}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(body)
     });
 
     const text = await r.text();
-    // try parse JSON, otherwise return raw text
+    if (!r.ok) {
+      console.error(`Hugging Face returned ${r.status}: ${text}`);
+      res.status(r.status).send(text);
+      return;
+    }
+
     try {
       const data = JSON.parse(text);
-      res.status(r.status).json(data);
+      res.status(200).json(data);
     } catch (err) {
-      res.status(r.status).send(text);
+      res.status(200).send(text);
     }
   } catch (err) {
-    console.error('AI proxy error', err);
+    console.error('AI proxy fetch failed', err);
     res.status(502).json({ error: 'Error connecting to Hugging Face', details: err.message });
   }
 };

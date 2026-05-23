@@ -18,6 +18,7 @@ Pasos para desplegar en Vercel
 4. En Vercel → Settings → Environment Variables añade:
    - `HF_API_KEY` = tu clave de Hugging Face (https://huggingface.co/settings/tokens)
    - `HF_MODEL` = nombre del modelo (opcional, por ejemplo `gpt2` o `meta-llama/Llama-2-7b-chat-hf` si tu cuenta lo soporta)
+   - No guardes el token en `README.md`, ni lo publiques en el repositorio.
 5. Despliega. Vercel detectará la función serverless en `api/ai.js` y la expondrá en `https://<tu-site>/api/ai`.
 
 Uso desde `index.html`
